@@ -66,6 +66,9 @@ a{color:inherit}
 .inset img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
 .inset small{position:absolute;left:8px;bottom:6px;font-size:clamp(9px,1.1vw,11px);text-transform:uppercase;letter-spacing:.05em;color:var(--g2)}
 .inset.br{width:38%;bottom:14%}
+.inset.mu-inset{aspect-ratio:200/350;width:14%;right:1.5%;bottom:16%;opacity:1;transform:none}
+.mu-inset svg{position:absolute;left:8%;top:3%;width:84%;height:auto}
+.mu-inset small{left:3px;right:3px;bottom:4px;text-align:center;font-size:clamp(7px,.95vw,10px);line-height:1.15}
 .timer{height:2px;background:transparent;margin-top:6px;overflow:hidden}
 .timer span{display:block;height:100%;width:0;background:var(--ink)}
 
@@ -210,6 +213,8 @@ footer .legal{grid-column:1/-1;border-top:1px solid var(--g1);padding-top:16px;c
   .s6[data-ph="1"] .subs li:nth-child(1) span,.s6[data-ph="2"] .subs li:nth-child(2) span,.s6[data-ph="3"] .subs li:nth-child(3) span,.s6[data-ph="4"] .subs li:nth-child(4) span,.s6[data-ph="5"] .subs li:nth-child(5) span{display:inline;margin-left:5px}
   .s4 .inset{width:44%}
   .s1 .cap{display:none}
+  .s2>svg{transform:translateX(-9%) scale(.86)}
+  .inset.mu-inset{width:20%;right:2%;bottom:18%}
 }
 .s6.ph5 .badge{opacity:1;transform:none;bottom:15%}
 .s6.ph6 .badge{opacity:0}
@@ -349,10 +354,22 @@ footer .legal{grid-column:1/-1;border-top:1px solid var(--g1);padding-top:16px;c
           <div class="scene s1 sidewrap" data-i="1"><span class="cap">Schemat · widok z boku</span></div>
 
           <!-- 2 skan dziasla -->
-          <div class="scene s2 archwrap" data-i="2"><span class="cap">Schemat · skan dziąsła</span><span class="badge">Skan tkanek miękkich gotowy</span>
+          <div class="scene s2 archwrap" data-i="2"><span class="cap">Schemat · skan dziąsła</span><span class="badge">Dziąsło i multi-unity zeskanowane</span>
             <div class="toggle t-path" role="group" aria-label="Strategia skanowania">
               <button type="button" data-path="c" aria-pressed="true">Ciągły</button>
               <button type="button" data-path="z" aria-pressed="false">Zigzag</button>
+            </div>
+            <div class="inset mu-inset" aria-hidden="true">
+              <svg viewBox="0 0 200 300">
+                <defs><linearGradient id="mum" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#4B4B4B"/><stop offset=".3" stop-color="#B9B9B9"/><stop offset=".45" stop-color="#FAFAFA"/><stop offset=".7" stop-color="#7A7A7A"/><stop offset="1" stop-color="#363844"/></linearGradient></defs>
+                <!-- profil z 209_RD (biblioteka DAS MU): 1 mm = 20 j., platforma z = 0 na y = 60 -->
+                <path d="M80 32H120L124 36V60H140V112L133 120V138L129 140V144L133 146V200L128 204V246L124 250V256L120 260H80L76 256V250L72 246V204L67 200V146L71 144V140L67 138V120L60 112V60H76V36Z" fill="url(#mum)" stroke="#363844" stroke-width="1"/>
+                <path d="M60 60H140" stroke="#FAFAFA" stroke-opacity=".7" stroke-width="1.2"/>
+                <path d="M93 34V88M107 34V88" stroke="#363844" stroke-opacity=".5" stroke-dasharray="3 3"/>
+                <path d="M60 280H140M60 274V286M140 274V286" stroke="#363844" stroke-width="1"/>
+                <text x="100" y="298" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" fill="#363844">Ø 4,0 mm</text>
+              </svg>
+              <small>DAS Multi-Unit (ilustracja)</small>
             </div>
           </div>
 
@@ -465,7 +482,7 @@ function ol(items){return '<ol>'+items.map(function(t){return '<li><span>'+t+'</
 /* ---------- checklista ---------- */
 var CHECK = [
   ['Przed',['System implantu i platforma multi-unit ustalone','Kod biblioteki / kompatybilności sprawdzony (LIBRARY_CODES, katalog DAS)','Scanbody Reference zgodny z platformą multi-unit','Śrubokręt Hex 1,20 i śrubokręt do Scanbody Reference','CAPS (Regular / Wide, 3,8 / 6 / 8 mm), jeśli rejestrujesz zwarcie','Biblioteki DAS CX zainstalowane w Exocad laboratorium']],
-  ['W trakcie',['Skan dziąsła: zigzag albo ciągły, zależnie od skanera','Scanbody Reference przykręcone (5 N·cm wg nazwy produktu)','Central X przykręcone Hex 1,20 (5 N·cm wg nazwy produktu)','Końcówki wszystkich ramion skierowane do środka, jak najbliżej siebie','Skan z Central X: jednym przejściem po okręgu przez końcówki ramion','CAPS tylko przy rejestracji zwarcia: poluzuj, dopasuj, załóż, dokręć, skanuj']],
+  ['W trakcie',['Skan dziąsła z widocznymi multi-unitami: zigzag albo ciągły','Scanbody Reference przykręcone (5 N·cm wg nazwy produktu)','Central X przykręcone Hex 1,20 (5 N·cm wg nazwy produktu)','Końcówki wszystkich ramion skierowane do środka, jak najbliżej siebie','Skan z Central X: jednym przejściem po okręgu przez końcówki ramion','CAPS tylko przy rejestracji zwarcia: poluzuj, dopasuj, załóż, dokręć, skanuj']],
   ['Po',['Best fit w Exocad z biblioteką DAS CX, dopasowanie sprawdzone','Elementy zdemontowane','Pytania techniczne przekazane do wsparcia DAS w KTI']]
 ];
 var CK_TOTAL = CHECK.reduce(function(a,g){return a+g[1].length;},0);
@@ -501,9 +518,9 @@ var STEPS = [
    'Laboratorium: biblioteki DAS CX do Exocad (DAS_0025_CX_PREMIUM, DAS_MU_CX_PREMIUM i analogi).']),
   dur:7000, tl:[[250,1],[1400,2]]},
 
- {chip:'Skan dziąsła',title:'Krok 1: skan dziąsła',lead:'Pierwszy skan rejestruje tkanki miękkie pacjenta.',
+ {chip:'Skan dziąsła',title:'Krok 1: skan dziąsła',lead:'Pierwszy skan rejestruje tkanki miękkie razem z widocznymi multi-unitami na implantach, jeszcze bez scanbody.',
   body:'<h3>Co robisz</h3>'+ul('do',[
-   'Zeskanuj tkanki miękkie łuku.',
+   'Zeskanuj tkanki miękkie łuku razem z odsłoniętymi multi-unitami na implantach (bez scanbody).',
    'Tu strategia ma znaczenie: zigzag albo skan ciągły, zależnie od skanera. Przełącz na schemacie, żeby zobaczyć obie ścieżki.',
    'Osobny skan samych Scanbody Reference nie jest potrzebny.'])+
    '<h3>Uwaga</h3>'+ul('warn',['Głowica skanera i ścieżki (ciągła i zigzag) są poglądowe.']),
@@ -673,6 +690,7 @@ function headTf(P,p){var o=headPose(P,p);return 'translate('+f1(o.x)+' '+f1(o.y)
 function archSVG(k, opts){
   var g='g'+k, h='', P0=PATHS[opts.path||'c'];
   h+='<svg viewBox="0 0 600 480" class="arch" aria-hidden="true"><defs>'+GRAD(g)+
+     '<radialGradient id="mug'+k+'" cx=".38" cy=".35" r=".75"><stop offset="0" stop-color="#FAFAFA"/><stop offset=".45" stop-color="#B9B9B9"/><stop offset="1" stop-color="#6F6F6F"/></radialGradient>'+
      '<pattern id="mesh'+k+'" width="22" height="19" patternUnits="userSpaceOnUse"><path d="M0 0H22M0 0L11 19L22 0M0 19H22" fill="none" stroke="#9A9A9A" stroke-width=".7"/></pattern>'+
      '<mask id="mk'+k+'" maskUnits="userSpaceOnUse" x="0" y="0" width="600" height="480"><rect width="600" height="480" fill="#000"/><path class="maskp" d="'+P0.d+'" fill="none" stroke="#fff" stroke-width="'+(opts.path==='z'?60:96)+'" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/></mask></defs>';
   h+='<path d="'+cl.d+' Z" fill="#EFEFEF"/>';
@@ -681,7 +699,17 @@ function archSVG(k, opts){
   if(opts.mesh){h+='<path d="'+cl.d+'" fill="none" stroke="url(#mesh'+k+')" stroke-width="81" stroke-linecap="round" mask="url(#mk'+k+')"/>';}
   if(opts.scan&&!opts.cloud){h+='<path class="trail" d="'+P0.d+'" fill="none" stroke="url(#'+g+')" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/>';}
   IMPL.forEach(function(p){
-    if(opts.positions){h+='<circle cx="'+f1(p.x)+'" cy="'+f1(p.y)+'" r="12" fill="none" stroke="#6F6F6F" stroke-width="1.5" stroke-dasharray="4 3"/>';}
+    if(opts.positions){
+      /* główka DAS Multi-Unit z góry (biblioteka 209_RD): platforma Ø 4,0 mm, stożek Ø ok. 2,4 mm, otwór na śrubę w osi */
+      var x=f1(p.x),y=f1(p.y);
+      h+='<g class="mu"><circle cx="'+x+'" cy="'+y+'" r="12.2" fill="url(#mug'+k+')" stroke="#6F6F6F" stroke-width="1"/>'+
+         '<circle cx="'+x+'" cy="'+y+'" r="7.4" fill="#D7D7D7" stroke="#7A7A7A" stroke-width=".8"/>'+
+         '<circle cx="'+x+'" cy="'+y+'" r="3.2" fill="#363844"/></g>';
+      var hl=[[0,0,'muhl'],[-6,-4,''],[5,-6,''],[7,5,''],[-5,7,'']];
+      hl.forEach(function(o){var dx=p.x+o[0],dy=p.y+o[1];
+        h+=(o[2]?'<circle class="dot muhl" cx="'+x+'" cy="'+y+'" r="15.5" fill="none" stroke="url(#'+g+')" stroke-width="2.2"':'<circle class="dot" cx="'+f1(dx)+'" cy="'+f1(dy)+'" r="1.9" fill="#0085C1"')+
+          ' data-kc="'+PATHS.c.nearest(p.x,p.y).toFixed(4)+'" data-kz="'+PATHS.z.nearest(p.x,p.y).toFixed(4)+'"/>';});
+    }
     else{h+='<circle cx="'+f1(p.x)+'" cy="'+f1(p.y)+'" r="13.7" fill="#4B4B4B" stroke="#FAFAFA" stroke-width="2"/>';}
   });
   if(opts.chains){
