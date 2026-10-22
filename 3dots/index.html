@@ -1,0 +1,1126 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Protokół 3Dots · KTI Implants</title>
+<meta name="description" content="Protokół postępowania z fotogrametrią 3Dots (Open Tech 3D) krok po kroku: przygotowanie, skan IOS, skanbody 3Dots, akwizycja, Optor L Ultra, eksport do CAD.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#363844;--black:#060509;--black2:#0A0909;--foot:#252525;
+  --g1:#4B4B4B;--g2:#6F6F6F;--g3:#7A7A7A;--g4:#B9B9B9;--line:#D7D7D7;--panel:#FAFAFA;--render:#F7F7F7;--white:#FFFFFF;
+  --blue:#0085C1;--teal:#009F97;
+  --grad:linear-gradient(119deg,#0085C1 0%,#008AB8 31%,#0098A2 80%,#009F97 100%);
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:Inter,Arial,sans-serif;color:var(--ink);background:var(--white);font-size:16px;line-height:1.45;overflow-x:hidden}
+a{color:inherit}
+.wrap{max-width:1440px;margin:0 auto;padding:0 40px}
+@media (max-width:700px){.wrap{padding:0 16px}.top span{display:none}.hero .wrap{padding-top:44px;padding-bottom:40px}}
+
+/* header */
+.top{border-bottom:1px solid var(--line);background:var(--white)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:76px}
+.top svg{width:139px;height:40px;flex:none}
+.top span{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--g2);text-align:right}
+
+/* hero */
+.hero{background:var(--black);color:#FFFEFE;position:relative;overflow:hidden}
+.hero .wrap{padding-top:64px;padding-bottom:56px;position:relative}
+.eyebrow{display:flex;align-items:center;gap:10px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--g4);margin-bottom:22px}
+.eyebrow:before{content:"";width:28px;height:2px;background:var(--grad);flex:none}
+.hero h1{font-size:clamp(42px,7vw,80px);font-weight:400;line-height:.95;letter-spacing:-.02em;max-width:900px}
+.hero p.lead{font-size:clamp(17px,2vw,20px);font-weight:300;color:var(--line);max-width:780px;margin-top:22px;letter-spacing:-.01em}
+
+/* player */
+.player{padding:40px 0 24px;background:var(--white)}
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:thin;padding-bottom:10px;-webkit-overflow-scrolling:touch}
+.chip{flex:none;font:400 13px/1 Inter,Arial,sans-serif;text-transform:uppercase;letter-spacing:.03em;color:var(--g3);background:transparent;border:1px solid var(--line);border-radius:30px;padding:10px 16px;cursor:pointer;transition:color .3s,border-color .3s,background .3s}
+.chip b{font-weight:400;color:var(--g4);margin-right:6px;transition:color .3s}
+.chip:hover{border-color:var(--ink);color:var(--ink)}
+.chip.done{color:var(--ink)}
+.chip[aria-current="step"]{background:var(--black);border-color:var(--black);color:#FFFEFE}
+.progress{height:2px;background:var(--line);margin:6px 0 24px;position:relative}
+.progress span{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--grad);transition:width .6s var(--ease)}
+
+.grid{display:grid;gap:28px;align-items:start}
+@media (min-width:980px){.grid{grid-template-columns:minmax(0,1.38fr) minmax(0,1fr);gap:40px}}
+
+.stage{position:relative;aspect-ratio:16/10;background:radial-gradient(120% 95% at 50% 30%,#FFFFFF 0%,#F4F4F4 55%,#E6E7E8 100%);overflow:hidden;border:1px solid var(--line)}
+#gl{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .5s ease;touch-action:none}
+.stage.is3d #gl{opacity:1}
+.stage.orbit #gl{cursor:grab}
+.stage.orbit #gl:active{cursor:grabbing}
+.scene{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .5s ease,visibility 0s linear .5s;pointer-events:none}
+.scene.active{opacity:1;visibility:visible;transition:opacity .5s ease}
+.scene.active .toggle,.scene.active .clickable{pointer-events:auto}
+.scene.reset,.scene.reset *{transition:none!important;animation:none!important}
+.scene>img,.scene>svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.scene img{object-fit:contain}
+.cap{position:absolute;left:3%;top:3.5%;font-size:clamp(10px,1.3vw,12px);text-transform:uppercase;letter-spacing:.06em;color:var(--g2);display:flex;align-items:center;gap:8px;z-index:3}
+.cap:before{content:"";width:16px;height:2px;background:var(--grad)}
+.badge{position:absolute;left:3%;bottom:4%;z-index:4;background:var(--black);color:#FFFEFE;font-size:clamp(10px,1.4vw,13px);text-transform:uppercase;letter-spacing:.04em;padding:8px 14px;border-radius:30px;opacity:0;transform:translateY(10px);transition:opacity .5s,transform .6s var(--ease);max-width:70%}
+.inset{position:absolute;right:2.5%;bottom:4%;width:30%;background:#fff;border:1px solid var(--line);opacity:0;transform:translateY(16px) scale(.96);transition:opacity .6s,transform .8s var(--ease);z-index:3;box-shadow:none}
+.inset img{display:block;width:100%;height:auto}
+.inset small{display:block;padding:5px 8px 6px;font-size:clamp(8px,1vw,10.5px);text-transform:uppercase;letter-spacing:.05em;color:var(--g2);border-top:1px solid var(--line)}
+.timer{height:2px;background:transparent;margin-top:6px;overflow:hidden}
+.timer span{display:block;height:100%;width:0;background:var(--ink)}
+.hint3d{position:absolute;right:2.5%;top:3.5%;z-index:5;font-size:clamp(9px,1.1vw,11px);text-transform:uppercase;letter-spacing:.06em;color:var(--g2);background:rgba(255,255,255,.8);border:1px solid var(--line);border-radius:30px;padding:6px 10px;opacity:0;transition:opacity .4s;pointer-events:none}
+.stage.orbit .hint3d{opacity:1}
+.stage.vid .hint3d{opacity:0}
+.fallback{position:absolute;inset:0;display:none;place-items:center;text-align:center;padding:10%;color:var(--g2);font-size:14px;z-index:2}
+.stage.no3d .scene.s3d.active .fallback{display:grid}
+
+/* 3D labels */
+#lbl{position:absolute;inset:0;z-index:4;pointer-events:none}
+.l3{position:absolute;left:0;top:0;display:flex;align-items:center;gap:0;white-space:nowrap;font-size:clamp(9.5px,1.2vw,12.5px);color:var(--ink);opacity:0;transition:opacity .45s}
+.l3.on{opacity:1}
+.l3 i{display:block;width:7px;height:7px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 3px rgba(0,133,193,.18);flex:none}
+.l3 em{display:block;width:clamp(14px,3vw,34px);height:1px;background:var(--ink);flex:none}
+.l3 span{display:block;background:rgba(255,255,255,.88);border:1px solid var(--line);padding:4px 9px;border-radius:30px}
+.l3.left{flex-direction:row-reverse}
+
+/* HUD (Optor-like) */
+.hud{position:absolute;left:3%;bottom:4%;z-index:5;background:rgba(6,5,9,.86);color:#FFFEFE;border-radius:10px;padding:7px 12px;width:min(46%,340px);opacity:0;transition:opacity .4s}
+.hud.on{opacity:1}
+.hud b{display:block;font-weight:600;font-size:clamp(9px,1.1vw,12.5px);letter-spacing:.01em}
+.hud small{display:block;font-size:clamp(8.5px,1vw,10.5px);color:var(--g4);margin-top:3px}
+.hud .bar{height:3px;background:rgba(255,255,255,.18);margin-top:6px;border-radius:2px;overflow:hidden}
+.hud .bar span{display:block;height:100%;width:0;background:var(--grad)}
+.hud .ok{color:#7FE3A0}
+
+/* video overlay */
+.vbox{position:absolute;inset:0;background:#0A0909;z-index:6;display:none}
+.vbox video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#0A0909}
+.vbox small{position:absolute;left:3%;bottom:3.5%;font-size:clamp(9px,1.1vw,11px);text-transform:uppercase;letter-spacing:.05em;color:var(--g4)}
+.stage.vid .vbox{display:block}
+.toggle{position:absolute;right:2.5%;top:3%;z-index:7;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;max-width:70%}
+.toggle button{font:400 11px/1 Inter,Arial,sans-serif;text-transform:uppercase;letter-spacing:.04em;padding:8px 12px;border-radius:30px;border:1px solid var(--ink);background:rgba(255,255,255,.88);color:var(--ink);cursor:pointer;transition:background .3s,color .3s}
+.toggle button[aria-pressed="true"]{background:var(--black);border-color:var(--black);color:#FFFEFE}
+.stage.vid .toggle button{border-color:#FFFEFE}
+.stage.has-toggle .hint3d{top:auto;bottom:4%}
+
+/* subs (Optor phases) */
+.subs{position:absolute;left:3%;right:3%;bottom:3.5%;display:flex;flex-wrap:wrap;gap:6px;z-index:4;list-style:none}
+.subs li{font-size:clamp(9px,1.15vw,12px);text-transform:uppercase;letter-spacing:.03em;padding:6px 10px;border-radius:30px;border:1px solid var(--line);background:rgba(255,255,255,.85);color:var(--g3);transition:background .4s,color .4s,border-color .4s}
+.subs li b{font-weight:400;margin-right:5px}
+.subs li.now{background:var(--black);color:#FFFEFE;border-color:var(--black)}
+.subs li.past{color:var(--ink);border-color:var(--ink)}
+@media (max-width:600px){.subs{flex-wrap:nowrap;gap:4px}.subs li{padding:5px 8px}.subs li span{display:none}.subs li.now span{display:inline;margin-left:4px}.inset{width:36%}}
+
+/* panel */
+.panel{min-height:200px}
+.pin{transition:opacity .45s ease,transform .55s var(--ease)}
+.pin.out{opacity:0;transform:translateY(12px)}
+.pnum{font-size:16px;font-weight:300;color:var(--g3);letter-spacing:-.02em;margin-bottom:10px}
+.panel h2{font-size:clamp(30px,3.4vw,44px);font-weight:400;line-height:.95;letter-spacing:-.02em;margin-bottom:14px}
+.panel p.lead{font-size:17px;font-weight:300;color:var(--g1);margin-bottom:22px}
+.panel h3{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--g3);padding-bottom:8px;border-bottom:2px solid var(--ink);margin:18px 0 0}
+.panel ul,.panel ol{list-style:none}
+.panel li{padding:10px 0;border-bottom:1px solid var(--line);font-weight:300;font-size:15px}
+.panel ol{counter-reset:k}
+.panel ol li{counter-increment:k;display:grid;grid-template-columns:34px 1fr}
+.panel ol li:before{content:counter(k,decimal-leading-zero)".";color:var(--blue);font-weight:400}
+.panel ul.do li{display:grid;grid-template-columns:18px 1fr}
+.panel ul.do li:before{content:"";width:8px;height:8px;margin-top:7px;background:var(--ink)}
+.panel ul.warn li{display:grid;grid-template-columns:18px 1fr}
+.panel ul.warn li:before{content:"";width:8px;height:8px;margin-top:7px;border:1px solid var(--g2)}
+.panel b{font-weight:600}
+.panel .tbc{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--blue);white-space:nowrap}
+
+/* checklist */
+.cl h3{margin-top:14px}
+.cl label{display:grid;grid-template-columns:28px 1fr;align-items:start;padding:9px 0;border-bottom:1px solid var(--line);font-weight:300;font-size:15px;cursor:pointer}
+.cl input{appearance:none;-webkit-appearance:none;width:18px;height:18px;border:1px solid var(--ink);margin-top:2px;display:grid;place-content:center;cursor:pointer;background:#fff}
+.cl input:checked{background:var(--black);border-color:var(--black)}
+.cl input:checked:after{content:"";width:9px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translate(1px,-1px)}
+.cl input:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.cl input:checked+span{color:var(--g3);text-decoration:line-through;text-decoration-color:var(--g4)}
+.clbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;font-size:14px;color:var(--g2)}
+
+/* controls */
+.controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:22px;padding-top:20px;border-top:1px solid var(--line)}
+.controls .grp{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.btn{font:400 16px/1.2 Inter,Arial,sans-serif;text-transform:uppercase;letter-spacing:-.02em;padding:16px 36px;border-radius:30px;border:1px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;transition:background .3s,color .3s,border-color .3s,opacity .3s}
+.btn:hover{background:var(--ink);color:#fff}
+.btn.dark{background:var(--black);border-color:var(--black);color:#FFFEFE}
+.btn.dark:hover{background:var(--ink);border-color:var(--ink)}
+.btn:disabled{opacity:.35;cursor:default;background:transparent;color:var(--ink)}
+.btn.dark:disabled{background:var(--black);color:#FFFEFE}
+.btn.small{font-size:13px;padding:10px 18px}
+.btn[aria-pressed="true"]{background:var(--ink);color:#fff}
+.count{font-size:15px;font-weight:300;color:var(--g2);min-width:64px;text-align:center}
+.hint{font-size:13px;color:var(--g3)}
+.btn:focus-visible,.chip:focus-visible,.toggle button:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+@media (max-width:700px){.btn{font-size:14px;padding:12px 20px}.hint{display:none}.controls{justify-content:center}}
+.note{font-size:14px;font-weight:300;color:var(--g2);margin-top:14px}
+
+footer{background:var(--foot);color:#CECECE;padding:44px 0 36px;font-size:14px}
+footer .wrap{display:grid;gap:24px}
+@media (min-width:860px){footer .wrap{grid-template-columns:auto 1fr;align-items:start}}
+footer .contact{display:flex;flex-wrap:wrap;gap:8px 24px}
+footer .contact a{color:#FFFEFE;text-decoration:none}
+footer .contact a:hover{text-decoration:underline}
+footer .legal{grid-column:1/-1;border-top:1px solid var(--g1);padding-top:16px;color:var(--g4);font-size:13px}
+
+/* ---------- s0: system ---------- */
+.s0{background:#fff}
+.s0 .ph-a,.s0 .ph-b{transition:opacity 1s ease,transform 1.6s var(--ease)}
+.s0 .ph-a{opacity:0;transform:scale(1.04)}
+.s0.ph1 .ph-a{opacity:1;transform:none}
+.s0.ph3 .ph-a{opacity:0;transform:scale(.97)}
+.s0 .ph-b{opacity:0;transform:scale(1.05)}
+.s0.ph3 .ph-b{opacity:1;transform:none}
+.ann .ln{stroke:var(--ink);stroke-width:2;fill:none;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .9s var(--ease)}
+.ann .dt{opacity:0;transition:opacity .4s}
+.ann text{font-family:Inter,Arial,sans-serif;fill:var(--ink);font-size:34px;opacity:0;transition:opacity .6s}
+.ann text.sm{font-size:26px;fill:var(--g2)}
+.s0.ph2 .a1 .ln{stroke-dashoffset:0}
+.s0.ph2 .a1 .dt,.s0.ph2 .a1 text{opacity:1}
+.s0.ph2 .a1 text{transition-delay:.5s}
+.s0.ph3 .a1{opacity:0;transition:opacity .4s}
+.s0.ph3 .a2 .ln{stroke-dashoffset:0;transition-delay:.7s}
+.s0.ph3 .a2 .dt,.s0.ph3 .a2 text{opacity:1;transition-delay:1s}
+.specs{position:absolute;left:3%;right:3%;bottom:4%;display:flex;flex-wrap:wrap;gap:6px;z-index:4;list-style:none}
+.specs li{font-size:clamp(9px,1.2vw,12px);text-transform:uppercase;letter-spacing:.03em;padding:6px 11px;border-radius:30px;border:1px solid var(--ink);background:rgba(255,255,255,.9);opacity:0;transform:translateY(8px);transition:opacity .5s,transform .6s var(--ease);transition-delay:calc(var(--i)*.1s)}
+.specs li b{font-weight:600;margin-right:4px}
+.s0.ph4 .specs li{opacity:1;transform:none}
+
+/* inset phases */
+.s1.ph2 .inset,.s2.ph2 .inset,.s3.ph2 .inset{opacity:1;transform:none}
+.inset.lb{right:auto;left:2.5%}
+
+/* s6, s9: crossfade photos */
+.xf img{transition:opacity 1s ease,transform 1.6s var(--ease)}
+.xf .i2{opacity:0;transform:scale(1.03)}
+.xf.ph2 .i1{opacity:0}
+.xf.ph2 .i2{opacity:1;transform:none}
+.xf .badge.b1{opacity:1;transform:none}
+.xf.ph2 .badge.b1{opacity:0}
+.xf.ph2 .badge.b2{opacity:1;transform:none}
+.xf .credit{position:absolute;right:2.5%;bottom:3.5%;z-index:4;font-size:clamp(8px,1vw,10.5px);text-transform:uppercase;letter-spacing:.05em;color:var(--g2);background:rgba(255,255,255,.85);padding:4px 8px;border-radius:20px}
+.dark-bg{background:#0A0909}
+.dark-bg .cap{color:var(--g4)}
+.dark-bg .credit{background:rgba(6,5,9,.7);color:var(--g4)}
+
+/* s8: comparison */
+.snew .still{transition:opacity .8s}
+.snew.ph2 .still{opacity:0}
+.snew video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .8s;background:#0A0909}
+.snew.ph2 video{opacity:1}
+.newtag{position:absolute;right:2.5%;top:3%;z-index:4;font-size:clamp(9px,1.1vw,11px);text-transform:uppercase;letter-spacing:.06em;color:#FFFEFE;background:var(--grad);padding:6px 11px;border-radius:30px}
+.skal.ph2 .inset{opacity:1;transform:none}
+.skal .inset{width:24%}
+.chip.new{border-color:var(--teal);color:var(--teal)}
+.chip.new[aria-current="step"]{background:var(--teal);border-color:var(--teal);color:#FFFEFE}
+
+/* s10 errors */
+.errs{position:absolute;inset:12% 3% 4%;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,1fr);gap:8px}
+.err{background:var(--white);border:1px solid var(--line);border-top:2px solid var(--ink);padding:clamp(6px,1.4vw,14px);display:flex;flex-direction:column;justify-content:space-between;opacity:0;transform:translateY(14px);transition:opacity .5s,transform .6s var(--ease);transition-delay:calc(var(--i)*.14s);min-height:0;overflow:hidden}
+.serr.ph1 .err{opacity:1;transform:none}
+.err b{font-weight:400;font-size:clamp(12px,1.7vw,17px);line-height:1.1;letter-spacing:-.01em}
+.err span{font-size:clamp(9.5px,1.2vw,12px);color:var(--g2);font-weight:300}
+.err em{font-style:normal;font-size:clamp(9px,1.1vw,11px);color:var(--blue);text-transform:uppercase;letter-spacing:.04em}
+
+/* s11 checklist ring */
+.ring{position:absolute;inset:0;display:grid;place-items:center;z-index:3}
+.ring svg{width:40%;height:auto;overflow:visible}
+.ring .pr{transition:stroke-dashoffset .8s var(--ease)}
+.ring text{font-family:Inter,Arial,sans-serif}
+.sck .bg{opacity:0;transition:opacity 1s}
+.sck.ph1 .bg{opacity:.2}
+.sck .ring{opacity:0;transform:scale(.94);transition:opacity .6s,transform .8s var(--ease)}
+.sck.ph1 .ring{opacity:1;transform:none}
+
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.rm *,.rm *:before,.rm *:after{animation:none!important;transition:none!important}
+@media print{.controls,.chips,.toggle,.timer{display:none}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <svg viewBox="0 0 139 40" role="img" aria-label="KTI Implants"><defs><linearGradient id="kti-logo-g" gradientUnits="userSpaceOnUse" x1="2.50781" x2="37.4922" y1="10.2951" y2="29.7042"><stop stop-color="#0085C1"/><stop stop-color="#008AB8" offset="0.31"/><stop stop-color="#0098A2" offset="0.8"/><stop stop-color="#009F97" offset="1"/></linearGradient></defs><path d="M20 40C31.0457 40 40 31.0457 40 20C40 8.9543 31.0457 0 20 0C8.95431 0 0 8.9543 0 20C0 31.0457 8.95431 40 20 40Z" fill="url(#kti-logo-g)"/><path d="M14.7374 27.1719L9.06079 20.2316V27.1719H6.66034V12.8281H9.06079V19.6976L14.3374 12.8281H17.1378L11.69 19.8667L17.6809 27.1719H14.7381H14.7374Z" fill="#fff"/><path d="M22.7828 24.5441C22.7828 25.0479 22.914 25.5454 23.1849 25.9685C23.627 26.6576 24.363 27.1572 25.2036 27.1705V25.7475L22.7828 24.5441ZM22.7828 20.7192V21.9205L25.2036 23.093V21.8896L22.7828 20.7192ZM22.7828 22.6425V23.841L25.2036 25.0135V23.8101L22.7828 22.6425Z" fill="#fff"/><path d="M29.3184 12.8289V15.0616H25.2037V21.1725L22.7829 19.9972V15.0616H18.6683V12.8289H29.3184Z" fill="#fff"/><path d="M30.9294 12.8281H33.339V27.1719H30.9294V12.8281Z" fill="#fff"/><g fill="#363844"><path d="M44.8023 13.1665H46.9473V26.8331H44.8023V13.1665Z"/><path d="M63.8298 12.8694V26.8328H61.6848V19.2533L57.1491 27.0896H57.1323L52.5882 19.2449V26.8328H50.4432V12.8694H50.6038L57.14 23.2914L63.6684 12.8694H63.8291H63.8298Z"/><path d="M67.3242 13.1665H71.8936C74.5389 13.1665 76.7008 15.193 76.7008 17.6769C76.7008 20.1609 74.5389 22.094 71.8936 22.094H69.4685V26.8331H67.3235V13.1665H67.3242ZM74.5557 17.6601C74.5557 16.3542 73.3601 15.2947 71.8936 15.2947H69.4685V19.9658L71.8936 19.9742C73.3601 19.9826 74.5557 18.9399 74.5557 17.6594V17.6601Z"/><path d="M87.5122 24.6965V26.8331H79.2717V13.1665H81.4167V24.6965H87.5122Z"/><path d="M95.6377 12.8862H95.5093L89.084 26.8321H91.4058L92.3384 24.7559L93.1713 22.9153L95.578 17.5756L97.8585 22.6508L97.9778 22.9153L98.8086 24.7559L99.144 25.501L99.7411 26.8321H102.065L95.6398 12.8862H95.6377Z"/><path d="M115.435 13.1327V27.5564H115.333L106.592 17.9399V26.8505H104.447V12.4436H104.557L113.281 22.0433V13.1327H115.435Z"/><path d="M127.492 15.2947H123.829V26.8331H121.676V15.2947H118.013V13.1665H127.491V15.2947H127.492Z"/><path d="M129.275 24.4341L130.97 23.2216C131.581 24.2902 132.717 24.9 134.031 24.9C135.565 24.9 136.727 24.1625 136.727 23.1198C136.727 21.8568 134.93 21.0934 133.335 20.4071C131.733 19.6949 129.953 18.8641 129.953 16.7191C129.953 14.5741 131.894 12.9209 134.353 12.9209C136.303 12.9209 137.761 13.8619 138.321 15.3627L136.727 16.4651C136.304 15.541 135.363 15.0238 134.37 15.0238C133.116 15.0238 132.115 15.8041 132.115 16.7703C132.115 17.8383 133.378 18.22 135.04 18.9322C137.202 19.8816 138.88 20.9243 138.88 23.0777C138.88 25.502 136.778 27.0626 134.006 27.0626C131.759 27.0626 130.055 26.0114 129.275 24.4348V24.4341Z"/></g></svg>
+    <span>Protokół · Fotogrametria 3Dots · Open Tech 3D</span>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Fotogrametria · prace pełnołukowe na MUA</p>
+    <h1>3Dots krok po kroku</h1>
+    <p class="lead">Protokół postępowania z fotogrametrią 3Dots (Open Tech 3D): przygotowanie, skan IOS, skanbody 3Dots, akwizycja, Optor L Ultra i plik STL dla laboratorium. Dla lekarzy, techników i zespołu KTI.</p>
+  </div>
+</section>
+
+<main class="player" id="protokol">
+  <div class="wrap">
+    <nav class="chips" id="chips" aria-label="Kroki protokołu"></nav>
+    <div class="progress" aria-hidden="true"><span id="bar"></span></div>
+
+    <div class="grid">
+      <div>
+        <div class="stage" id="stage">
+          <canvas id="gl" aria-hidden="true"></canvas>
+          <div id="lbl" aria-hidden="true"></div>
+          <span class="hint3d">Przeciągnij, aby obrócić</span>
+
+          <!-- 0 system -->
+          <div class="scene s0" data-i="0">
+            <svg viewBox="0 0 1600 1000" class="ann" aria-hidden="true">
+              <g class="ph-a">
+                <image href="img/3dots-urzadzenie.jpg" x="70" y="40" width="900" height="900"/>
+              </g>
+              <g class="ph-b">
+                <image href="img/skanbody-3dots-zestaw.jpg" x="40" y="70" width="1180" height="787"/>
+              </g>
+              <g class="a1">
+                <path class="ln" pathLength="1" d="M462 666L560 560H1040"/><path class="ln" pathLength="1" d="M732 646L780 560"/>
+                <circle class="dt" cx="462" cy="666" r="9" fill="#0085C1"/><circle class="dt" cx="732" cy="646" r="9" fill="#0085C1"/>
+                <text x="1060" y="555">2 kamery HD 12 MP</text><text x="1060" y="595" class="sm">skalibrowany układ stereo</text>
+                <path class="ln" pathLength="1" d="M610 652L700 330"/><path class="ln" pathLength="1" d="M628 398L700 330H1040"/>
+                <circle class="dt" cx="610" cy="652" r="9" fill="#009F97"/><circle class="dt" cx="628" cy="398" r="9" fill="#009F97"/>
+                <text x="1060" y="325">2 oświetlacze LED</text>
+                <path class="ln" pathLength="1" d="M142 460V180H1040"/><circle class="dt" cx="142" cy="464" r="9" fill="#0085C1"/>
+                <text x="1060" y="175">Przycisk start / stop</text>
+                <text x="1060" y="755">Ok. 35 cm od łuku, bez kontaktu</text><text x="1060" y="795" class="sm">render: Open Tech 3D</text>
+              </g>
+              <g class="a2">
+                <path class="ln" pathLength="1" d="M900 260L960 190H1230"/><circle class="dt" cx="900" cy="262" r="9" fill="#0085C1"/>
+                <text x="1250" y="185">Marker PEEK</text><text x="1250" y="225" class="sm">z kodami, mierzony</text><text x="1250" y="260" class="sm">przez 3Dots</text>
+                <path class="ln" pathLength="1" d="M430 200V120H1230V110"/><circle class="dt" cx="430" cy="204" r="9" fill="#009F97"/>
+                <text x="1250" y="95">Podstawa tytanowa na MUA</text>              </g>
+            </svg>
+            <span class="cap">Open Tech 3D · zestaw 3Dots</span>
+            <ul class="specs" aria-hidden="true"><li style="--i:0"><b>do 5 µm</b>dokładność</li><li style="--i:1"><b>do 2 µm</b>powtarzalność</li><li style="--i:2"><b>do 15 s</b>akwizycja</li><li style="--i:3"><b>1,5 kg</b>235 × 120 × 150 mm</li><li style="--i:4"><b>STL</b>eksport</li></ul>
+          </div>
+
+          <!-- 1 przygotowanie -->
+          <div class="scene s1 s3d" data-i="1"><span class="cap">Render 3D · elementy na implancie</span>
+            <div class="fallback">Wizualizacja 3D wymaga przeglądarki z obsługą WebGL.</div>
+          </div>
+
+          <!-- 2 kalibracja -->
+          <div class="scene skal s3d" data-i="2"><span class="cap">Render 3D · kalibracja</span>
+            <div class="hud" id="hudk"><b id="hudka">Kalibracja</b><small id="hudkb">&nbsp;</small><div class="bar"><span id="hudkc"></span></div></div>
+            <div class="inset"><img src="img/plytka-kalibracyjna.jpg" alt="3Dots na listwie kalibracyjnej z płytką na podstawce, zdjęcie produktu"><small>Zestaw kalibracyjny · Open Tech 3D</small></div>
+            <div class="fallback">Wizualizacja 3D wymaga przeglądarki z obsługą WebGL.</div>
+          </div>
+
+          <!-- 3 skan ios -->
+          <div class="scene s2 s3d" data-i="3"><span class="cap">Render 3D · skan IOS z podstawami tytanowymi</span>
+            <div class="inset"><img src="img/przyp2-mua.jpg" alt="Podstawy tytanowe skanbody 3Dots na MUA w szczęce, zdjęcie kliniczne"><small>Podstawy na MUA · dr L. Lavorgna</small></div>
+            <div class="fallback">Wizualizacja 3D wymaga przeglądarki z obsługą WebGL.</div>
+          </div>
+
+          <!-- 4 markery -->
+          <div class="scene s3 s3d" data-i="4"><span class="cap">Render 3D · markery PEEK w diament</span>
+            <div class="inset"><img src="img/klin-markery.jpg" alt="Skanbody 3Dots przykręcone do MUA, zdjęcie kliniczne"><small>Markery 3Dots · dr G. Dallari</small></div>
+            <div class="fallback">Wizualizacja 3D wymaga przeglądarki z obsługą WebGL.</div>
+          </div>
+
+          <!-- 5 akwizycja -->
+          <div class="scene s4 s3d has-video" data-i="5"><span class="cap">Render 3D · akwizycja stereo</span>
+            <div class="hud" id="hud4"><b id="hud4a">Gotowy</b><small id="hud4b">&nbsp;</small><div class="bar"><span id="hud4c"></span></div></div>
+            <div class="toggle" role="group" aria-label="Widok"><button type="button" data-v="" aria-pressed="true">Animacja 3D</button><button type="button" data-v="video/gabinet-akwizycja.mp4" data-cap="Akwizycja w gabinecie · dr Luca Ortensi, tech. dent. Marco Ortensi" aria-pressed="false">Nagranie z gabinetu</button><button type="button" data-v="video/optor-akwizycja.mp4" aria-pressed="false">Nagranie Optor</button></div>
+            <div class="fallback">Wizualizacja 3D wymaga przeglądarki z obsługą WebGL.</div>
+          </div>
+
+          <!-- 6 optor -->
+          <div class="scene s5 s3d has-video" data-i="6"><span class="cap">Render 3D · Optor L Ultra</span>
+            <ol class="subs" aria-hidden="true"><li><b>1</b><span>Punkty</span></li><li><b>2</b><span>Skanbody</span></li><li><b>3</b><span>Biblioteka</span></li></ol>
+            <div class="toggle" role="group" aria-label="Widok"><button type="button" data-v="" aria-pressed="true">Animacja 3D</button><button type="button" data-v="video/optor-identyfikacja.mp4" aria-pressed="false">Identyfikacja</button></div>
+            <div class="fallback">Wizualizacja 3D wymaga przeglądarki z obsługą WebGL.</div>
+          </div>
+
+          <!-- 7 bliskie implanty -->
+          <div class="scene s6 xf dark-bg" data-i="7"><span class="cap">Przypadek: szczęka, 6 implantów</span>
+            <img class="i1" src="img/przyp2-mua.jpg" alt="Szczęka z sześcioma MUA, zaznaczone dwa implanty blisko siebie">
+            <img class="i2" src="img/przyp2-switch.jpg" alt="Skanbody 3Dots przełożone na sąsiedni implant między dwiema akwizycjami">
+            <span class="badge b1">Dwa implanty bardzo blisko siebie</span>
+            <span class="badge b2">Przełożenie markera i dodatkowe zdjęcie</span>
+            <span class="credit">dr Luca Lavorgna</span>
+          </div>
+
+          <!-- 8 cad -->
+          <div class="scene s7 s3d has-video" data-i="8"><span class="cap">Render 3D · dopasowanie do podstaw</span>
+            <ol class="subs" aria-hidden="true"><li><b>1</b><span>Pozycje 3Dots</span></li><li><b>2</b><span>Nałożenie na IOS</span></li><li><b>3</b><span>Biblioteka</span></li><li><b>4</b><span>Model STL</span></li></ol>
+            <div class="toggle" role="group" aria-label="Widok"><button type="button" data-v="" aria-pressed="true">Animacja 3D</button><button type="button" data-v="video/optor-dopasowanie.mp4" aria-pressed="false">Dopasowanie</button></div>
+            <div class="fallback">Wizualizacja 3D wymaga przeglądarki z obsługą WebGL.</div>
+          </div>
+
+          <!-- 9 demontaz -->
+          <div class="scene s9 xf" data-i="9"><span class="cap">Zestaw 3Dots</span>
+            <img class="i1" src="img/skanbody-3dots-zestaw.jpg" alt="Skanbody 3Dots, śruby i klucze, zdjęcie produktu">
+            <img class="i2" src="img/walizka-3dots.jpg" alt="3Dots w walizce transportowej, zdjęcie produktu">
+            <span class="badge b1">Tytan: dowolna sterylizacja · PEEK: delikatnie</span>
+            <span class="badge b2">Urządzenie wraca do walizki</span>
+          </div>
+
+          <!-- 10 bledy -->
+          <div class="scene serr" data-i="10"><span class="cap">Najczęstsze błędy</span>
+            <div class="errs">
+              <div class="err" style="--i:0"><em>01</em><b>Brak kalibracji</b><span>przed każdym dniem zabiegowym</span></div>
+              <div class="err" style="--i:1"><em>02</em><b>Skan IOS bez podstaw</b><span>nie ma do czego dopasować pozycji</span></div>
+              <div class="err" style="--i:2"><em>03</em><b>Skanbody niedopasowany do MUA</b><span>profile MUA różnią się</span></div>
+              <div class="err" style="--i:3"><em>04</em><b>PEEK w autoklawie bez gazika</b><span>każdy element owinięty</span></div>
+              <div class="err" style="--i:4"><em>05</em><b>Zła odległość lub ruch</b><span>ok. 35 cm, łuk ok. ±15°</span></div>
+              <div class="err" style="--i:5"><em>06</em><b>Bliskie implanty na siłę</b><span>dodatkowe zdjęcie + Align</span></div>
+            </div>
+          </div>
+
+          <!-- 11 checklista -->
+          <div class="scene sck" data-i="11">
+            <img class="bg" src="img/klin-markery-zuchwa.jpg" alt="" aria-hidden="true">
+            <div class="ring" aria-hidden="true">
+              <svg viewBox="0 0 160 160">
+                <defs><linearGradient id="ringg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0085C1"/><stop offset="1" stop-color="#009F97"/></linearGradient></defs>
+                <circle cx="80" cy="80" r="62" fill="#FFFFFF" stroke="#D7D7D7" stroke-width="8"/>
+                <circle class="pr" cx="80" cy="80" r="62" fill="none" stroke="url(#ringg)" stroke-width="8" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" transform="rotate(-90 80 80)"/>
+                <text id="ringNum" x="80" y="84" text-anchor="middle" font-size="30" fill="#363844">0/0</text>
+                <text x="80" y="106" text-anchor="middle" font-size="9" fill="#6F6F6F" letter-spacing=".6">CHECKLISTA</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 12 nowosc: reverse scanbody -->
+          <div class="scene snew dark-bg" data-i="12"><span class="cap">Nowość · Reverse Scanbody</span>
+            <img class="still" src="img/optor-struktura-markery.jpg" alt="Konstrukcja testowa i skanbody 3Dots, kadr z nagrania">
+            <video muted playsinline loop preload="none" data-src="video/optor-porownanie.mp4"></video>
+            <span class="newtag">Nowość 2026</span>
+          </div>
+
+          <!-- 13 nowosc: jaw motion -->
+          <div class="scene snew dark-bg" data-i="13"><span class="cap">Nowość · Jaw Motion</span>
+            <img class="still" src="img/jaw-motion.jpg" alt="Modele szczęki i żuchwy z płaskimi markerami ruchu, kadr z nagrania">
+            <video muted playsinline loop preload="none" data-src="video/jaw-motion.mp4"></video>
+            <span class="newtag">Nowość 2026</span>
+          </div>
+
+          <div class="vbox" id="vbox"><video id="vid" muted playsinline loop preload="none"></video><small id="vcap">Nagranie ekranu Optor L Ultra (przyspieszone)</small></div>
+        </div>
+        <div class="timer" aria-hidden="true"><span id="timer"></span></div>
+      </div>
+
+      <article class="panel" id="panel" aria-live="polite"><div class="pin" id="pin"></div></article>
+    </div>
+
+    <div class="controls">
+      <div class="grp">
+        <button class="btn" id="prev" type="button">Wstecz</button>
+        <span class="count" id="count">00 / 13</span>
+        <button class="btn dark" id="next" type="button">Dalej</button>
+      </div>
+      <div class="grp">
+        <button class="btn small" id="replay" type="button">Odtwórz ponownie</button>
+        <button class="btn small" id="auto" type="button" aria-pressed="false">Auto-odtwarzanie</button>
+        <span class="hint">Klawiatura: ← →</span>
+      </div>
+    </div>
+    <noscript><p class="note">Wizualizacja wymaga JavaScript. Treść protokołu jest też w pliku protokol-3dots.md.</p></noscript>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <svg viewBox="0 0 139 40" width="139" height="40" role="img" aria-label="KTI Implants"><defs><linearGradient id="kti-logo-g2" gradientUnits="userSpaceOnUse" x1="2.50781" x2="37.4922" y1="10.2951" y2="29.7042"><stop stop-color="#0085C1"/><stop stop-color="#008AB8" offset="0.31"/><stop stop-color="#0098A2" offset="0.8"/><stop stop-color="#009F97" offset="1"/></linearGradient></defs><path d="M20 40C31.0457 40 40 31.0457 40 20C40 8.9543 31.0457 0 20 0C8.95431 0 0 8.9543 0 20C0 31.0457 8.95431 40 20 40Z" fill="url(#kti-logo-g2)"/><path d="M14.7374 27.1719L9.06079 20.2316V27.1719H6.66034V12.8281H9.06079V19.6976L14.3374 12.8281H17.1378L11.69 19.8667L17.6809 27.1719H14.7381H14.7374Z" fill="#fff"/><path d="M22.7828 24.5441C22.7828 25.0479 22.914 25.5454 23.1849 25.9685C23.627 26.6576 24.363 27.1572 25.2036 27.1705V25.7475L22.7828 24.5441ZM22.7828 20.7192V21.9205L25.2036 23.093V21.8896L22.7828 20.7192ZM22.7828 22.6425V23.841L25.2036 25.0135V23.8101L22.7828 22.6425Z" fill="#fff"/><path d="M29.3184 12.8289V15.0616H25.2037V21.1725L22.7829 19.9972V15.0616H18.6683V12.8289H29.3184Z" fill="#fff"/><path d="M30.9294 12.8281H33.339V27.1719H30.9294V12.8281Z" fill="#fff"/><g fill="#fff"><path d="M44.8023 13.1665H46.9473V26.8331H44.8023V13.1665Z"/><path d="M63.8298 12.8694V26.8328H61.6848V19.2533L57.1491 27.0896H57.1323L52.5882 19.2449V26.8328H50.4432V12.8694H50.6038L57.14 23.2914L63.6684 12.8694H63.8291H63.8298Z"/><path d="M67.3242 13.1665H71.8936C74.5389 13.1665 76.7008 15.193 76.7008 17.6769C76.7008 20.1609 74.5389 22.094 71.8936 22.094H69.4685V26.8331H67.3235V13.1665H67.3242ZM74.5557 17.6601C74.5557 16.3542 73.3601 15.2947 71.8936 15.2947H69.4685V19.9658L71.8936 19.9742C73.3601 19.9826 74.5557 18.9399 74.5557 17.6594V17.6601Z"/><path d="M87.5122 24.6965V26.8331H79.2717V13.1665H81.4167V24.6965H87.5122Z"/><path d="M95.6377 12.8862H95.5093L89.084 26.8321H91.4058L92.3384 24.7559L93.1713 22.9153L95.578 17.5756L97.8585 22.6508L97.9778 22.9153L98.8086 24.7559L99.144 25.501L99.7411 26.8321H102.065L95.6398 12.8862H95.6377Z"/><path d="M115.435 13.1327V27.5564H115.333L106.592 17.9399V26.8505H104.447V12.4436H104.557L113.281 22.0433V13.1327H115.435Z"/><path d="M127.492 15.2947H123.829V26.8331H121.676V15.2947H118.013V13.1665H127.491V15.2947H127.492Z"/><path d="M129.275 24.4341L130.97 23.2216C131.581 24.2902 132.717 24.9 134.031 24.9C135.565 24.9 136.727 24.1625 136.727 23.1198C136.727 21.8568 134.93 21.0934 133.335 20.4071C131.733 19.6949 129.953 18.8641 129.953 16.7191C129.953 14.5741 131.894 12.9209 134.353 12.9209C136.303 12.9209 137.761 13.8619 138.321 15.3627L136.727 16.4651C136.304 15.541 135.363 15.0238 134.37 15.0238C133.116 15.0238 132.115 15.8041 132.115 16.7703C132.115 17.8383 133.378 18.22 135.04 18.9322C137.202 19.8816 138.88 20.9243 138.88 23.0777C138.88 25.502 136.778 27.0626 134.006 27.0626C131.759 27.0626 130.055 26.0114 129.275 24.4348V24.4341Z"/></g></svg>
+    <div>
+      <p style="color:#FFFEFE;margin-bottom:8px">Pytania o 3Dots, skanbody i biblioteki CAD: wsparcie KTI Implants</p>
+      <div class="contact">
+        <a href="mailto:biuro@kti-implants.pl">biuro@kti-implants.pl</a>
+        <a href="tel:+48508051765">+48 508 051 765</a>
+        <a href="https://www.kti-implants.pl">www.kti-implants.pl</a>
+      </div>
+    </div>
+    <p class="legal">Informacje według materiałów producenta Open Tech 3D (Rezzato, Włochy) i publikacji Mangano FG i wsp., J Dent 2026;165:106269 (badanie in vitro). Przed użyciem zapoznaj się z instrukcją producenta. Materiał dla profesjonalistów (lekarze, technicy dentystyczni), nie stanowi zaleceń leczenia. 3Dots i Optor L Ultra są produktami Open Tech 3D. Zdjęcia produktu i nagrania: Open Tech 3D, publikowane za zgodą; zdjęcia kliniczne: dr Giacomo Dallari, dr Luca Lavorgna; nagranie z gabinetu: dr Luca Ortensi, tech. dent. Marco Ortensi. Wizualizacje 3D: rzeczywisty skan IOS i geometria z bibliotek, proporcje skanbody orientacyjne. Wersja 1.2, 22.10.2026.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+var RM=(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)||/[?&]statyczny\b/.test(location.search);
+if(RM)document.documentElement.classList.add('rm');
+var FM=/[?&]klatka=([0-9.]+)/.exec(location.search),FRAME=FM?Math.min(1,+FM[1]):null;
+
+function ul(cls,items){return '<ul class="'+cls+'">'+items.map(function(t){return '<li><span>'+t+'</span></li>';}).join('')+'</ul>';}
+function ol(items){return '<ol>'+items.map(function(t){return '<li><span>'+t+'</span></li>';}).join('')+'</ol>';}
+var TBC=' <span class="tbc">do potwierdzenia</span>';
+
+/* ---------- checklista ---------- */
+var CHECK=[
+ ['Przed',['3Dots skalibrowany w tym dniu zabiegowym: 3 podstawki × 3 rejestracje płytki','System implantu i typ łączników MUA ustalone','Skanbody 3Dots dobrane do MUA: podstawy tytanowe i markery PEEK (numery 0–5), czyste i przygotowane','Klucz hex 1,25 do skanbody (maks. 10 N·cm)']],
+ ['W gabinecie',['Podstawy tytanowe przykręcone na MUA','Skan IOS łuku razem z podstawami tytanowymi zapisany (STL lub OBJ)','Markery PEEK wkręcone w diament (kamery widzą 2 ściany), stabilne, niczym niezasłonięte','Zdjęcie kropek na górnych ścianach (przycisk 2 razy), potem akwizycja: ok. 35 cm, ruch po łuku ok. ±15°, ok. 15 s; liczba skanbody = liczba MUA','Implanty zbyt blisko: dodatkowe zdjęcie, łączone opcją Align','Do laboratorium: skan IOS i akwizycja 3Dots']],
+ ['W laboratorium i po',['Pozycje zdekodowane w Optor L Ultra, biblioteka CAD wybrana ręcznie','Dopasowanie do podstaw w skanie IOS sprawdzone, STL wyeksportowany','Skanbody odkręcone, umyte i zdezynfekowane albo wysterylizowane według materiału','Pytania techniczne przekazane do wsparcia KTI']]
+];
+var CK_TOTAL=CHECK.reduce(function(a,g){return a+g[1].length;},0);
+var STORE='kti-3dots-checklista-v3';
+function loadCk(){try{var v=JSON.parse(localStorage.getItem(STORE)||'[]');return Array.isArray(v)?v:[];}catch(e){return [];}}
+function saveCk(v){try{localStorage.setItem(STORE,JSON.stringify(v));}catch(e){}}
+function checklistHTML(){
+  var st=loadCk(),n=0,h='<div class="cl">';
+  CHECK.forEach(function(g){h+='<h3>'+g[0]+'</h3>';g[1].forEach(function(t){var id='ck'+n;h+='<label for="'+id+'"><input type="checkbox" id="'+id+'" data-k="'+n+'"'+(st.indexOf(n)>-1?' checked':'')+'><span>'+t+'</span></label>';n++;});});
+  return h+'<div class="clbar"><span id="ckc"></span><button class="btn small" type="button" id="ckreset">Wyczyść</button></div></div>';
+}
+
+/* ---------- treść kroków ---------- */
+var STEPS=[
+ {chip:'System',title:'Czym jest 3Dots',lead:'Przenośny skaner do stereofotogrametrii (Open Tech 3D). Rejestruje rzeczywiste pozycje implantów w pracach pełnołukowych i uzupełnia skan wewnątrzustny.',
+  body:'<h3>W skrócie</h3>'+ul('do',[
+   'Dwie skalibrowane kamery 12 MP i dwa oświetlacze LED widzą cały łuk w jednym kadrze. Pozycje liczy triangulacja, bez łączenia wielu ujęć.',
+   'Mierzone są tylko markery skanbody 3Dots. Tkanki miękkie, krew i ślina nie wpływają na pomiar.',
+   'Nie zastępuje skanera wewnątrzustnego: IOS rejestruje tkanki i podstawy tytanowe, 3Dots pozycje implantów. Współpracuje z każdym IOS.',
+   'Podział pracy: gabinet robi skan IOS i akwizycję, laboratorium dekoduje pozycje w Optor L Ultra i wybiera bibliotekę CAD.',
+   'Dane producenta: dokładność do 5 µm, powtarzalność do 2 µm, akwizycja do 15 s, 1,5 kg, eksport STL. Bez abonamentu i opłat rocznych.'])+
+   '<h3>Uwaga</h3>'+ul('warn',['Liczby dokładności to dane producenta i wynik badania in vitro (Mangano i wsp., J Dent 2026).']),
+  dur:10500, tl:[[100,1],[900,2],[5200,3],[7400,4]]},
+
+ {chip:'Przygotowanie',title:'Przygotowanie i dobór skanbody',lead:'Skanbody 3Dots ma dwie części: podstawę tytanową na MUA i marker PEEK z kodami. Dobierasz je do połączenia MUA, nie do samego implantu.',
+  body:'<h3>Co robisz</h3>'+ul('do',[
+   'Ustal system implantu i typ MUA (np. DAS Multi-Unit albo MUA innego systemu).',
+   'Dobierz skanbody 3Dots do tego MUA, po jednym na każdy łącznik. Profile MUA różnią się między producentami (np. JD i Nobel o 0,087 mm w części stożkowej), więc skanbody nie są „uniwersalne”.',
+   'W komplecie jest 6 markerów, ponumerowanych kropkami na górnej ścianie: od 0 do 5 kropek.',
+   'Przygotuj specjalny klucz hex 1,25. Moment dokręcenia: maks. 10 N·cm.'])+
+   '<h3>Uwaga</h3>'+ul('warn',[
+   'Przed pierwszym pacjentem danego dnia skalibruj 3Dots (następny krok).']),
+  dur:9500, k:'czesci', tl:[]},
+
+ {chip:'Kalibracja',title:'Kalibracja 3Dots',lead:'Przed każdym dniem zabiegowym kalibrujesz 3Dots płytką kalibracyjną. Płytka stoi kolejno na 3 podstawkach o różnych kątach, a na każdej robisz 3 rejestracje.',
+  body:'<h3>Co robisz</h3>'+ol([
+   'Zamocuj 3Dots i płytkę kalibracyjną na listwie z zestawu.',
+   'Ustaw płytkę na pierwszej podstawce i wykonaj 3 rejestracje: w pozycji środkowej, po lekkim przekręceniu płytki w prawo i po lekkim przekręceniu w lewo.',
+   'Zmień podstawkę na drugą (inny kąt) i powtórz 3 rejestracje: środek, w prawo, w lewo.',
+   'Zmień podstawkę na trzecią (kąt odwrotny) i powtórz 3 rejestracje. Razem 9 rejestracji.'])+
+   '<h3>Uwaga</h3>'+ul('warn',[
+   'Zalecenie producenta: kalibracja przed każdym dniem zabiegowym. Przeniesienie i wyłączenie 3Dots w ciągu dnia nie wymaga ponownej kalibracji; następnego dnia kalibrujesz od nowa.']),
+  dur:15000, k:'kalib', tl:[[400,2]]},
+
+ {chip:'Skan IOS',title:'Krok 1: podstawy tytanowe i skan IOS',lead:'Na MUA przykręcasz podstawy tytanowe skanbody 3Dots i skanujesz łuk razem z nimi. Do tych podstaw laboratorium dopasuje później pozycje z fotogrametrii.',
+  body:'<h3>Co robisz</h3>'+ul('do',[
+   'Przykręć podstawy tytanowe na wszystkie MUA: klucz hex 1,25, maks. 10 N·cm.',
+   'Zeskanuj łuk dowolnym skanerem wewnątrzustnym, razem z podstawami tytanowymi (cylindryczne skanbody). Z tego skanu pochodzi anatomia.',
+   'Łuk przeciwstawny i zgryz rejestrujesz według potrzeb przypadku, jak w zwykłym workflow IOS.',
+   'Zapisz skan jako STL albo OBJ.'])+
+   '<h3>Uwaga</h3>'+ul('warn',[
+   'Bez podstaw na skanie IOS laboratorium nie ma do czego dopasować pozycji z 3Dots.']),
+  dur:9500, k:'ios', tl:[[5200,2]]},
+
+ {chip:'Markery PEEK',title:'Krok 2: markery 3Dots w diament',lead:'Na podstawy tytanowe wkręcasz markery PEEK z kodami „w diament”: krawędzią do 3Dots, tak żeby kamery widziały dwie ściany każdego markera.',
+  body:'<h3>Co robisz</h3>'+ul('do',[
+   'Wkręć marker na każdą podstawę (klucz hex 1,25, maks. 10 N·cm) i sprawdź, czy siedzi stabilnie.',
+   'Ustaw każdy marker w diament: pionowa krawędź skierowana do 3Dots, widoczne dwie ściany z kodami.',
+   'Numer markera to liczba kropek na górnej ścianie (0–5). Na renderze: markery 0, 1, 2, 3 i 4.',
+   'Markery muszą być widoczne od strony kamer: nic ich nie zasłania (warga, ślinociąg, retraktor).'])+
+   '<h3>Uwaga</h3>'+ul('warn',[
+   'Gdy dwa implanty są tak blisko, że markery się nie mieszczą, robisz dodatkowe zdjęcie (krok 07).']),
+  dur:10500, k:'montaz', tl:[[6400,2]]},
+
+ {chip:'Akwizycja',title:'Krok 3: zdjęcie i akwizycja 3Dots',lead:'Najpierw robisz zdjęcie, które rejestruje kropki na górnych ścianach markerów. Potem akwizycja: 3Dots ok. 35 cm od łuku, ruch po łuku o ok. 30° (ok. 15° w prawo i 15° w lewo od pozycji frontalnej), ok. 15 s.',
+  body:'<h3>Co robisz</h3>'+ol([
+   'Zrób zdjęcie: naciśnij przycisk 2 razy. Zdjęcie rejestruje kropki na górnych ścianach markerów, czyli ich numery.',
+   'Uruchom akwizycję przyciskiem start/stop.',
+   'Trzymaj stałą odległość ok. 35 cm, łuk w środku okręgu ruchu, wychylenie ok. ±15°. Bez kontaktu z pacjentem, bez definiowania układu odniesienia.',
+   'Obserwuj ekran: komunikat odległości (np. „Scanning Distance: OPTIMAL”) i liczbę znalezionych skanbody („Scan Abutments Found”). Liczba musi zgadzać się z liczbą MUA.',
+   'Do laboratorium wysyłasz skan IOS i akwizycję 3Dots (zielone punkty). Pozycje implantów dekoduje laboratorium.'])+
+   '<h3>Po co zdjęcie kropek</h3>'+ul('do',[
+   'Markery wkręcamy w kolejności, ale zdarza się wkręcić je w innej. Dzięki zdjęciu software wie, który marker stoi na której pozycji.',
+   'Przy wyborze biblioteki technik od razu widzi, czy musi zmienić kolejność. Jeśli markery są w odpowiedniej kolejności, software automatycznie rozpoznaje kropki na ściankach.']),
+  dur:14500, k:'akwizycja', tl:[], video:true},
+
+ {chip:'Optor L Ultra',title:'Krok 4: dekodowanie w laboratorium',lead:'Laboratorium otwiera akwizycję w Optor L Ultra, zamienia zmierzone punkty na pozycje implantów i ręcznie wybiera bibliotekę CAD.',
+  body:'<h3>Workflow</h3>'+ol([
+   'Pomiar markerów: chmura punktów z akwizycji 3Dots.',
+   'Skanbody 3Dots w zmierzonych pozycjach. Optor pokazuje błąd dopasowania („Current Fitting Error”).',
+   'Wybór biblioteki: ręcznie, z dostępnych bibliotek CAD (np. DAS dla DAS Multi-Unit). Dzięki zdjęciu kropek technik widzi, czy kolejność markerów trzeba zmienić.']),
+  dur:9000, k:'optor', tl:[], video:true},
+
+ {chip:'Bliskie implanty',title:'Implanty blisko siebie',lead:'Gdy dwa implanty stoją tak blisko, że oba markery się nie mieszczą, robisz dodatkowe zdjęcie i łączysz je z pierwszym opcją Align.',
+  body:'<h3>Co robisz</h3>'+ol([
+   'Akwizycja z markerem na jednym z bliskich implantów.',
+   'Przełóż marker na sąsiedni implant i zrób dodatkowe zdjęcie.',
+   'Opcją Align połącz drugie zdjęcie z pierwszym: jeden zestaw pozycji.']),
+  dur:8000, tl:[[3600,2]]},
+
+ {chip:'Dopasowanie i STL',title:'Krok 5: dopasowanie i plik STL',lead:'Laboratorium dopasowuje pozycje z 3Dots do podstaw tytanowych na skanie IOS i eksportuje otwarty plik STL ze skanbody wybranej biblioteki.',
+  body:'<h3>Co robisz</h3>'+ol([
+   'Wczytaj skan IOS (STL lub OBJ) z podstawami tytanowymi.',
+   'Nałóż pozycje z 3Dots na podstawy w skanie IOS (matching całego zestawu).',
+   'Pozycje z fotogrametrii i podstawy ze skanu IOS zawsze delikatnie się różnią. Do projektu bierzesz pozycje z 3Dots.',
+   'Sprawdź dopasowanie i wyeksportuj STL: anatomia ze skanu IOS i skanbody wybranej biblioteki w pozycjach z 3Dots.',
+   'Projektuj w CAD (np. exocad) bez kompensowania niedokładności skanu.']),
+  dur:13000, k:'cad', tl:[], video:true},
+
+ {chip:'Demontaż',title:'Demontaż i przygotowanie skanbody',lead:'Po akwizycji odkręcasz markery i podstawy. Część tytanową i część PEEK przygotowujesz do kolejnego użycia inaczej.',
+  body:'<h3>Co robisz</h3>'+ul('do',[
+   'Odkręć markery i podstawy tytanowe. Dalsze postępowanie z MUA według planu lekarza, protokół tego nie obejmuje.',
+   'Część tytanową możesz sterylizować dowolną metodą.',
+   'Część PEEK z kodami: delikatnie mocz w specjalnych roztworach. Można wkładać do autoklawu, ale każdy element musi być owinięty gazikiem.',
+   'Urządzenie, płytkę i podstawki kalibracyjne przechowuj w walizce.'])+
+   '<h3>Uwaga</h3>'+ul('warn',['Uszkodzony marker (rysy, ubytki kodów) albo luz na MUA: nie używaj, spisz nr kat., LOT, opis i zdjęcia i przekaż do osoby odpowiedzialnej za reklamacje w KTI.']),
+  dur:8000, tl:[[3600,2]]},
+
+ {chip:'Typowe błędy',title:'Typowe błędy',lead:'Z materiałów producenta, ustaleń KTI, badania Mangano i nagrania Optor L Ultra.',
+  body:ul('do',[
+   'Brak kalibracji w danym dniu zabiegowym.',
+   'Skan IOS bez podstaw tytanowych: laboratorium nie ma do czego dopasować pozycji.',
+   'Skanbody niedopasowany do MUA.',
+   'Odległość i ruch inne niż ok. 35 cm i ok. ±15°; nie wszystkie skanbody znalezione, a akwizycja nie powtórzona.',
+   'Dwa bliskie implanty mierzone jednym zdjęciem, choć markery się nie mieszczą.',
+   'Część PEEK w autoklawie bez owinięcia gazikiem.']),
+  dur:8000, tl:[[150,1]]},
+
+ {chip:'Checklista',title:'Checklista',lead:'Zaznacz wykonane punkty. Stan zapisuje się tylko w tej przeglądarce.',
+  body:null, dur:9000, tl:[[150,1]]},
+
+ {chip:'Reverse Scanbody',isNew:true,title:'Nowość: Reverse Scanbody',lead:'Moduł Optor L Ultra, który ma pojawić się w tym roku. Porównuje gotową konstrukcję z pozycjami zarejestrowanymi przez 3Dots i pokazuje odchylenia na mapie kolorów.',
+  body:'<h3>Po co</h3>'+ul('do',[
+   'Laboratoria i lekarze chcą sprawdzać, jak dokładnie wycięta jest konstrukcja względem zdjęcia fotogrametrycznego.'])+
+   '<h3>Na nagraniu</h3>'+ol([
+   'Markery 3Dots przykręcone do konstrukcji z sześcioma gniazdami.',
+   'Akwizycja 3Dots i identyfikacja skanbody.',
+   'Dopasowanie pliku STL konstrukcji do zmierzonych pozycji.',
+   'Mapa odchyleń w skali ±0,200 mm.'])+
+   '<h3>Dostępność</h3>'+ul('warn',['Aktualizacja oprogramowania oraz Reverse Scanbody mają być gotowe jeszcze w tym roku. Do końca roku upgrade będzie bezpłatny.']),
+  dur:14000, tl:[[2000,2]]},
+
+ {chip:'Jaw Motion',isNew:true,title:'Nowość: Jaw Motion',lead:'Rozwój 3Dots o rejestrację ruchu: ruch żuchwy względem szczęki zapisany za pomocą płaskich markerów. Aktualizacja wychodzi w listopadzie 2026.',
+  body:'<h3>Co daje</h3>'+ul('do',[
+   'Zapis dynamiki: ruch żuchwy względem szczęki rejestrowany przez 3Dots za pomocą płaskich markerów.',
+   'Wizualizacja trajektorii ruchu na cyfrowych modelach szczęki i żuchwy.'])+
+   '<h3>Dostępność</h3>'+ul('warn',['Aktualizacja oprogramowania o Jaw Motion wychodzi w listopadzie 2026, a do końca roku będzie bezpłatna.']),
+  dur:0, tl:[[2000,2]]}
+];
+var N=STEPS.length;
+
+/* ---------- nawigacja ---------- */
+var stage=document.getElementById('stage');
+var scenes=[].slice.call(stage.querySelectorAll('.scene'));
+var chips=document.getElementById('chips'),pin=document.getElementById('pin'),bar=document.getElementById('bar');
+var prev=document.getElementById('prev'),next=document.getElementById('next'),count=document.getElementById('count');
+var autoBtn=document.getElementById('auto'),timer=document.getElementById('timer');
+var vbox=document.getElementById('vbox'),vid=document.getElementById('vid');
+chips.innerHTML=STEPS.map(function(s,i){return '<button type="button" class="chip'+(s.isNew?' new':'')+'" data-i="'+i+'"><b>'+String(i).padStart(2,'0')+'</b>'+s.chip+'</button>';}).join('');
+var chipEls=[].slice.call(chips.children);
+var cur=-1,timers=[],auto=false,autoTO=0,swapTO=0;
+function pad(n){return String(n).padStart(2,'0');}
+function setPh(el,n){el.classList.add('ph'+n);el.setAttribute('data-ph',n);}
+function resetScene(el){
+  el.classList.add('reset');
+  for(var i=1;i<=6;i++)el.classList.remove('ph'+i);
+  el.removeAttribute('data-ph');
+  void el.offsetWidth;el.classList.remove('reset');
+}
+function clearRun(){timers.forEach(clearTimeout);timers=[];}
+
+/* nagrania w scenach 4 i 5 */
+var vcap=document.getElementById('vcap');
+function setVideo(src,cap){
+  if(src){
+    vcap.textContent=cap||'Nagranie ekranu Optor L Ultra (przyspieszone)';
+    stage.classList.add('vid');
+    if(vid.getAttribute('src')!==src){vid.setAttribute('src',src);}
+    try{vid.currentTime=0;}catch(e){}
+    var p=vid.play();if(p&&p.catch)p.catch(function(){});
+    if(window.KTI3D)window.KTI3D.pause(true);
+  }else{
+    stage.classList.remove('vid');vid.pause();
+    if(window.KTI3D)window.KTI3D.pause(false);
+  }
+}
+scenes.forEach(function(sc){
+  [].forEach.call(sc.querySelectorAll('.toggle button'),function(b){
+    b.addEventListener('click',function(){
+      [].forEach.call(b.parentNode.querySelectorAll('button'),function(x){x.setAttribute('aria-pressed',x===b?'true':'false');});
+      var v=b.getAttribute('data-v');setVideo(v,b.getAttribute('data-cap'));
+      if(!v)play(cur);
+      if(auto)setAuto(false);
+    });
+  });
+});
+function resetToggles(el){
+  [].forEach.call(el.querySelectorAll('.toggle button'),function(x,k){x.setAttribute('aria-pressed',k===0?'true':'false');});
+  setVideo('');
+}
+
+function play(i){
+  clearRun();
+  var el=scenes[i],st=STEPS[i];
+  resetScene(el);
+  stage.classList.toggle('has-toggle',!!st.video);
+  var is3d=!!st.k&&!!window.KTI3D;
+  stage.classList.toggle('is3d',!!st.k);
+  stage.classList.remove('orbit');
+  if(st.k){if(window.KTI3D)window.KTI3D.show(st.k,{rm:RM,frame:FRAME});}
+  else if(window.KTI3D)window.KTI3D.hide();
+  /* scena 8: wideo */
+  var v8=el.querySelector('video[data-src]');
+  scenes.forEach(function(s){var v=s.querySelector('video[data-src]');if(v&&s!==el){v.pause();}});
+  if(v8){if(!v8.getAttribute('src'))v8.setAttribute('src',v8.getAttribute('data-src'));try{v8.currentTime=0;}catch(e){}v8.pause();}
+  if(RM||FRAME!==null){st.tl.forEach(function(t){setPh(el,t[1]);});if(v8&&RM===false){}return;}
+  st.tl.forEach(function(t){timers.push(setTimeout(function(){setPh(el,t[1]);if(v8&&t[1]===2){var p=v8.play();if(p&&p.catch)p.catch(function(){});}},t[0]));});
+}
+function renderPanel(i){
+  var s=STEPS[i];
+  var html='<div class="pnum">'+pad(i)+'.</div><h2>'+s.title+'</h2><p class="lead">'+s.lead+'</p>'+(s.body===null?checklistHTML():s.body);
+  clearTimeout(swapTO);
+  if(RM||cur<0){pin.innerHTML=html;wireChecklist();return;}
+  pin.classList.add('out');
+  swapTO=setTimeout(function(){pin.innerHTML=html;wireChecklist();void pin.offsetWidth;pin.classList.remove('out');},220);
+}
+function updateRing(){
+  var n=loadCk().length;
+  var pr=stage.querySelector('.ring .pr');if(pr)pr.style.strokeDashoffset=1-n/CK_TOTAL;
+  var t=document.getElementById('ringNum');if(t)t.textContent=n+'/'+CK_TOTAL;
+  var c=document.getElementById('ckc');if(c)c.textContent='Zaznaczone: '+n+' z '+CK_TOTAL;
+}
+function wireChecklist(){
+  var boxes=pin.querySelectorAll('.cl input');
+  [].forEach.call(boxes,function(b){b.addEventListener('change',function(){
+    var v=loadCk(),k=+b.getAttribute('data-k'),ix=v.indexOf(k);
+    if(b.checked&&ix<0)v.push(k);if(!b.checked&&ix>-1)v.splice(ix,1);saveCk(v);updateRing();});});
+  var r=document.getElementById('ckreset');
+  if(r)r.addEventListener('click',function(){saveCk([]);[].forEach.call(boxes,function(b){b.checked=false;});updateRing();});
+  updateRing();
+}
+function scrollChip(i,instant){
+  var c=chipEls[i],l=c.offsetLeft-chips.offsetLeft,w=chips.clientWidth;
+  var target=l-(w-c.offsetWidth)/2;
+  if(RM||instant){chips.scrollLeft=target;return;}
+  try{chips.scrollTo({left:target,behavior:'smooth'});}catch(e){chips.scrollLeft=target;}
+}
+function go(i){
+  i=Math.max(0,Math.min(N-1,i));
+  if(i===cur)return;
+  var first=cur<0;
+  if(cur>=0)resetToggles(scenes[cur]);
+  scenes.forEach(function(s,k){s.classList.toggle('active',k===i);});
+  renderPanel(i);
+  cur=i;
+  play(i);
+  chipEls.forEach(function(c,k){if(k===i)c.setAttribute('aria-current','step');else c.removeAttribute('aria-current');c.classList.toggle('done',k<i);});
+  scrollChip(i,first);
+  bar.style.width=(i/(N-1)*100)+'%';
+  count.textContent=pad(i)+' / '+pad(N-1);
+  prev.disabled=i===0;next.disabled=i===N-1;
+  try{history.replaceState(null,'','#krok-'+i);}catch(e){}
+  if(auto)armAuto();
+}
+function armAuto(){
+  clearTimeout(autoTO);
+  timer.style.transition='none';timer.style.width='0';
+  var d=STEPS[cur].dur;
+  if(!auto||!d||cur>=N-1){if(cur>=N-1)setAuto(false);return;}
+  void timer.offsetWidth;
+  timer.style.transition='width '+d+'ms linear';timer.style.width='100%';
+  autoTO=setTimeout(function(){go(cur+1);},d);
+}
+function setAuto(on){
+  auto=on;autoBtn.setAttribute('aria-pressed',on?'true':'false');
+  autoBtn.textContent=on?'Pauza':'Auto-odtwarzanie';
+  if(on){if(cur>=N-1)go(0);setVideo('');resetToggles(scenes[cur]);armAuto();}
+  else{clearTimeout(autoTO);timer.style.transition='none';timer.style.width='0';}
+}
+prev.addEventListener('click',function(){go(cur-1);});
+next.addEventListener('click',function(){go(cur+1);});
+autoBtn.addEventListener('click',function(){setAuto(!auto);});
+chips.addEventListener('click',function(e){var b=e.target.closest('.chip');if(b)go(+b.getAttribute('data-i'));});
+document.getElementById('replay').addEventListener('click',function(){resetToggles(scenes[cur]);play(cur);if(auto)armAuto();});
+document.addEventListener('keydown',function(e){
+  var t=e.target;if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable))return;
+  if(e.altKey||e.ctrlKey||e.metaKey)return;
+  if(e.key==='ArrowRight'){go(cur+1);e.preventDefault();}
+  else if(e.key==='ArrowLeft'){go(cur-1);e.preventDefault();}
+  else if(e.key==='Home'){go(0);}
+  else if(e.key==='End'){go(N-1);}
+});
+document.addEventListener('visibilitychange',function(){if(document.hidden&&auto)setAuto(false);});
+
+/* moduł 3D zgłasza gotowość albo błąd */
+window.KTI_UI={phase:function(i,n){var el=scenes[i];if(!el)return;var li=el.querySelectorAll('.subs li');[].forEach.call(li,function(x,k){x.classList.toggle('now',k===n-1);x.classList.toggle('past',k<n-1);});},
+  orbit:function(on){stage.classList.toggle('orbit',!!on);}};
+window.addEventListener('kti3d-ready',function(){if(cur>=0&&STEPS[cur].k)play(cur);});
+window.addEventListener('kti3d-error',function(){stage.classList.add('no3d');});
+setTimeout(function(){if(!window.KTI3D)stage.classList.add('no3d');},9000);
+window.addEventListener('kti3d-ready',function(){stage.classList.remove('no3d');});
+
+var m=/krok-(\d+)/.exec(location.hash);
+go(m?+m[1]:0);
+})();
+</script>
+<script src="model/modele.js"></script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
+import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+
+const stage=document.getElementById('stage'),canvas=document.getElementById('gl'),LBL=document.getElementById('lbl');
+let renderer;
+try{
+  renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:'high-performance'});
+}catch(e){window.dispatchEvent(new Event('kti3d-error'));throw e;}
+renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
+renderer.outputColorSpace=THREE.SRGBColorSpace;
+
+const scene=new THREE.Scene();
+const pmrem=new THREE.PMREMGenerator(renderer);
+scene.environment=pmrem.fromScene(new RoomEnvironment(),0.04).texture;
+const camera=new THREE.PerspectiveCamera(30,16/10,1,4000);
+const key=new THREE.DirectionalLight(0xffffff,1.6);key.position.set(-60,140,90);scene.add(key);
+const rim=new THREE.DirectionalLight(0xdfefff,0.7);rim.position.set(90,60,-120);scene.add(rim);
+scene.add(new THREE.HemisphereLight(0xffffff,0xb9b9b9,0.35));
+
+/* ---------- pomocnicze ---------- */
+const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v));
+const ss=(a,b,t)=>{const x=clamp((t-a)/(b-a));return x*x*(3-2*x);};
+const V=(x,y,z)=>new THREE.Vector3(x,y,z);
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function decode(b64){
+  const bin=atob(b64),u8=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u8[i]=bin.charCodeAt(i);
+  const buf=u8.buffer,h=new Float32Array(buf,0,10),nV=h[0],nT=h[1],mn=[h[2],h[3],h[4]],mx=[h[5],h[6],h[7]],ib=h[8];
+  const q=new Uint16Array(buf,40,nV*3),pos=new Float32Array(nV*3);
+  for(let i=0;i<nV*3;i++){const k=i%3;pos[i]=mn[k]+q[i]/65535*(mx[k]-mn[k]);}
+  const off=40+nV*6,idx=ib===2?new Uint16Array(buf.slice(off,off+nT*6)):new Uint32Array(buf.slice(off,off+nT*12));
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setIndex(new THREE.BufferAttribute(idx,1));g.computeVertexNormals();return g;
+}
+const MD=window.KTI_MODELE;
+const G={jaw:decode(MD.upper),sb:decode(MD.sbdirect).rotateX(-Math.PI/2),das:decode(MD.das25).rotateX(-Math.PI/2),impl:decode(MD.implant).rotateX(-Math.PI/2)};
+
+/* ---------- materiały ---------- */
+const MAT={
+  metal:new THREE.MeshPhysicalMaterial({color:0xc4c8cd,metalness:.85,roughness:.45,envMapIntensity:1.5}),
+  ti:new THREE.MeshPhysicalMaterial({color:0xdfe2e6,metalness:.7,roughness:.36,envMapIntensity:1.8}),
+  device:new THREE.MeshPhysicalMaterial({color:0xf3f3f1,roughness:.32,clearcoat:1,clearcoatRoughness:.12}),
+  black:new THREE.MeshPhysicalMaterial({color:0x111214,roughness:.35,metalness:.2,clearcoat:.4}),
+  glass:new THREE.MeshPhysicalMaterial({color:0x0d1d3a,roughness:.05,metalness:.3,clearcoat:1,clearcoatRoughness:.02}),
+  led:new THREE.MeshPhysicalMaterial({color:0xf2f2ee,roughness:.2,transmission:.25,emissive:0xfff4d8,emissiveIntensity:.15}),
+  optor:new THREE.MeshStandardMaterial({color:0x2f7fd8,roughness:.5,transparent:true,opacity:1}),
+  lib:new THREE.MeshPhysicalMaterial({color:0x0098A2,metalness:.6,roughness:.35,transparent:true,opacity:1,side:THREE.DoubleSide}),
+  stl:new THREE.MeshStandardMaterial({color:0x6f9fd8,roughness:.6,side:THREE.DoubleSide,transparent:true,opacity:1}),
+  stlg:new THREE.MeshStandardMaterial({color:0xa7adb4,roughness:.6}),
+  ghost:new THREE.MeshPhysicalMaterial({color:0x00B3B0,roughness:.3,transparent:true,opacity:.35,depthWrite:false,depthTest:true}),
+  green:new THREE.MeshStandardMaterial({color:0x2bbd4a,roughness:.4,emissive:0x1a8a30,emissiveIntensity:.35})
+};
+
+/* ---------- szczęka: rzeczywisty skan IOS (upper.stl, uproszczony) ---------- */
+/* Podstawy tytanowe zeskanowane razem z łukiem: model „Scanbody Direct” z biblioteki dopasowany ICP do skanu
+   (śr. błąd ok. 0,2 mm). t, q: położenie i obrót modelu (oś z modelu = oś podstawy) w układzie pliku skanu.
+   c: środek górnej powierzchni podstawy (z = 6,4 mm), a: oś skierowana od tkanek. */
+const RX90=new THREE.Quaternion().setFromAxisAngle(V(1,0,0),Math.PI/2);
+const RAW_MUA=[
+ {t:[-21.565,4.066,1.931],q:[0.71805,-0.03632,0.00092,0.69505]},
+ {t:[-17.273,5.068,15.05],q:[0.61737,-0.06312,0.02482,0.78374]},
+ {t:[-8.088,5.646,23.694],q:[0.57708,-0.08295,0.00752,0.81243]},
+ {t:[11.247,5.289,22.28],q:[0.60065,0.03634,-0.01949,0.79845]},
+ {t:[21.854,5.142,5.517],q:[0.65901,0.00246,0.01395,0.752]}
+].map(m=>{const q=new THREE.Quaternion(...m.q).normalize(),t=V(...m.t);
+  return {t,q,qi:q.clone().invert(),qg:q.clone().multiply(RX90),c:V(0,0,6.4).applyQuaternion(q).add(t),a:V(0,0,1).applyQuaternion(q)};});
+/* promień modelu podstawy co 0,1 mm wysokości (z pliku Scanbody Direct.stl) */
+const SB_PROF=[2.4,2.4,2.45,2.45,2.51,2.51,2.56,2.56,2.62,2.62,2.67,2.67,2.73,2.73,2.78,2.78,2.84,2.84,2.89,2.89,2.95,2.97,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2.97,2.94,2.94,2.88,2.88,2.82,2.82,2.77,2.77,2.71,2.71,2.65,2.65,2.59,2.59,2.53,2.5,2.48,1.75,1.75,1.75,1.75,1.75,1.75,1.75,1.75,1.75,1.75];
+function sbLocal(v){for(const m of RAW_MUA){const l=v.clone().sub(m.t).applyQuaternion(m.qi);if(l.z<-1.5||l.z>7.2)continue;const r=Math.hypot(l.x,l.y),pr=SB_PROF[Math.min(69,Math.max(0,Math.floor(l.z/0.1)))];if(r<pr+1.2)return {z:l.z,r,pr};}return null;}
+const jaw=new THREE.Group();scene.add(jaw);
+jaw.rotation.z=Math.PI;
+{const cen=RAW_MUA.reduce((s,m)=>s.add(m.c),V(0,0,0)).multiplyScalar(1/RAW_MUA.length);jaw.position.set(cen.x,cen.y-1,-cen.z+2);}
+jaw.updateMatrixWorld(true);
+/* zeskanowane podstawy wycięte ze skanu (w ich miejscu stoi model z biblioteki); reszta skanu w kolorze dziąsła */
+{const p=G.jaw.attributes.position,n=p.count,col=new Float32Array(n*3),pink=new THREE.Color('#d5928b'),v=V(0,0,0),cut=new Uint8Array(n);
+ for(let i=0;i<n;i++){v.fromBufferAttribute(p,i);const l=sbLocal(v);col[i*3]=pink.r;col[i*3+1]=pink.g;col[i*3+2]=pink.b;cut[i]=(l&&l.z>1.6&&l.r<l.pr+0.7)?1:0;}
+ G.jaw.setAttribute('color',new THREE.BufferAttribute(col,3));
+ const ix=G.jaw.index.array,keep=[];for(let i=0;i<ix.length;i+=3){if(cut[ix[i]]&&cut[ix[i+1]]&&cut[ix[i+2]])continue;keep.push(ix[i],ix[i+1],ix[i+2]);}
+ G.jaw.setIndex(new THREE.BufferAttribute(n<65536?new Uint16Array(keep):new Uint32Array(keep),1));}
+const jawMat=new THREE.MeshPhysicalMaterial({vertexColors:true,roughness:.5,clearcoat:.35,clearcoatRoughness:.35,sheen:.4,sheenColor:new THREE.Color('#ffd6cf'),side:THREE.DoubleSide,transparent:true,opacity:1});
+const jawMesh=new THREE.Mesh(G.jaw,jawMat);jaw.add(jawMesh);
+/* skan odsłaniany wzdłuż łuku (oś x pliku) */
+const xr=(()=>{const p=G.jaw.attributes.position;let a=1e9,b=-1e9;for(let i=0;i<p.count;i++){const x=p.getX(i);a=Math.min(a,x);b=Math.max(b,x);}return [a,b];})();
+const revU={uRev:{value:xr[1]+5}};
+const jawRevMat=jawMat.clone();jawRevMat.transparent=false;
+jawRevMat.onBeforeCompile=sh=>{sh.uniforms.uRev=revU.uRev;
+  sh.vertexShader=sh.vertexShader.replace('#include <common>','#include <common>\nvarying float vRawX;').replace('#include <begin_vertex>','#include <begin_vertex>\nvRawX=position.x;');
+  sh.fragmentShader=sh.fragmentShader.replace('#include <common>','#include <common>\nuniform float uRev;\nvarying float vRawX;').replace('#include <clipping_planes_fragment>','#include <clipping_planes_fragment>\nif(vRawX>uRev)discard;').replace('#include <dithering_fragment>','#include <dithering_fragment>\nfloat eg=smoothstep(uRev-2.2,uRev,vRawX);gl_FragColor.rgb=mix(gl_FragColor.rgb,vec3(0.0,0.62,0.66),eg*0.75);');};
+jawRevMat.customProgramCacheKey=()=>'rev';
+const jawGhost=new THREE.Mesh(G.jaw,new THREE.MeshBasicMaterial({color:0x8a96a0,transparent:true,opacity:.1,depthWrite:false,side:THREE.DoubleSide}));jaw.add(jawGhost);
+/* cień kontaktowy */
+const shadowTex=(()=>{const c=document.createElement('canvas');c.width=c.height=128;const g=c.getContext('2d');const gr=g.createRadialGradient(64,64,6,64,64,64);gr.addColorStop(0,'rgba(0,0,0,.28)');gr.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=gr;g.fillRect(0,0,128,128);return new THREE.CanvasTexture(c);})();
+const shadow=new THREE.Mesh(new THREE.PlaneGeometry(95,80),new THREE.MeshBasicMaterial({map:shadowTex,transparent:true,depthWrite:false}));shadow.rotation.x=-Math.PI/2;shadow.position.y=-26;scene.add(shadow);
+
+/* ---------- skanbody 3Dots: baza z biblioteki + marker z punktami ---------- */
+const PW=5.6,PH=9,PB=6.2; /* marker: przekrój 5,6 mm, wysokość 9 mm (orientacyjnie), stoi na podstawie (góra podstawy 6,4 mm) */
+/* „zalepienie” szczeliny między podstawą a dziąsłem: kołnierz w kolorze dziąsła, od powierzchni podstawy na zewnątrz */
+const SBR=z=>SB_PROF[Math.min(69,Math.max(0,Math.floor(z/0.1)))];
+const gumGeo=new THREE.LatheGeometry([[SBR(1.9)+.02,1.9],[SBR(1.4)+.25,1.35],[3.7,0.8],[4.3,0.2],[4.7,-0.6]].map(p=>new THREE.Vector2(p[0],p[1])),64);gumGeo.computeVertexNormals();
+const gumMat=new THREE.MeshPhysicalMaterial({color:0xd5928b,roughness:.5,clearcoat:.35,clearcoatRoughness:.35,sheen:.4,sheenColor:new THREE.Color('#ffd6cf'),side:THREE.DoubleSide});
+function faceDots(seed,cols,rows,hole){const R=rng(seed),pts=[];for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){if(hole&&r===1&&c===1)continue;if(R()<0.24)continue;pts.push([(c+.5)/cols+(R()-.5)*.08,(r+.5)/rows+(R()-.5)*.05]);}return pts;}
+function faceTex(pts,w,h,hole){const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');g.fillStyle='#151619';g.fillRect(0,0,w,h);
+  const R=rng(w*h+pts.length);for(let i=0;i<900;i++){g.fillStyle='rgba(255,255,255,'+(R()*.035)+')';g.fillRect(R()*w,R()*h,1.5,1.5);}
+  g.strokeStyle='rgba(255,255,255,.22)';g.lineWidth=3;g.strokeRect(1.5,1.5,w-3,h-3);
+  const rr=w*.072;pts.forEach(p=>{g.beginPath();g.arc(p[0]*w,p[1]*h,rr,0,Math.PI*2);g.fillStyle='#f4f4f1';g.fill();});
+  if(hole){g.beginPath();g.arc(w/2,h/2,w*.16,0,Math.PI*2);g.fillStyle='#050506';g.fill();g.strokeStyle='#8d9196';g.lineWidth=w*.03;g.stroke();}
+  const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return t;}
+const FACES=[0,1,2,3,4].map(k=>{const pts=faceDots(101+k*17,3,5,false);return {pts,tex:faceTex(pts,192,309,false)};});
+/* górna ściana: numer markera = liczba kropek (0–5), otwór na śrubę w środku */
+const TOP_SLOTS=[[.2,.2],[.8,.8],[.8,.2],[.2,.8],[.5,.16]];
+const TOPS=[0,1,2,3,4,5].map(k=>{const pts=TOP_SLOTS.slice(0,k);return {pts,tex:faceTex(pts,192,192,true)};});
+const BOT=new THREE.MeshPhysicalMaterial({color:0x151619,roughness:.4});
+const prismGeo=new RoundedBoxGeometry(PW,PH,PW,3,.45);
+/* RoundedBoxGeometry ma grupy materiałów jak BoxGeometry: +x,-x,+y,-y,+z,-z */
+function prismMats(k){const f=i=>new THREE.MeshPhysicalMaterial({map:FACES[(i+k)%5].tex,roughness:.38,metalness:.15,clearcoat:.35,clearcoatRoughness:.3});return [f(0),f(1),new THREE.MeshPhysicalMaterial({map:TOPS[k].tex,roughness:.38,metalness:.15,clearcoat:.35}),BOT,f(2),f(3)];}
+function localDots(k){ /* pozycje punktów na ścianach w układzie markera */
+  const out=[],yc=PB+PH/2,h=PW/2+.02;
+  const side=(fi,map)=>FACES[(fi+k)%5].pts.forEach(p=>{const u=(p[0]-.5)*PW,v=(.5-p[1])*PH;out.push(map(u,v));});
+  side(0,(u,v)=>V(h,yc+v,-u));side(1,(u,v)=>V(-h,yc+v,u));side(2,(u,v)=>V(u,yc+v,h));side(3,(u,v)=>V(-u,yc+v,-h));
+  TOPS[k].pts.forEach(p=>out.push(V((p[0]-.5)*PW,PB+PH+.02,(p[1]-.5)*PW)));return out;}
+function makeMarker(k,matOverride){
+  const g=new THREE.Group();
+  const base=new THREE.Mesh(G.sb,matOverride||MAT.metal);g.add(base);
+  const pr=new THREE.Mesh(prismGeo,matOverride||prismMats(k));pr.position.y=PB+PH/2;g.add(pr);
+  g.userData={base,pr,dots:localDots(k)};return g;}
+const UPY=V(0,1,0);
+/* marker w diament: obrót wokół osi tak, żeby pionowa krawędź patrzyła na 3Dots (pozycja frontalna akwizycji) */
+const DEV_DIR=V(0,Math.sin(THREE.MathUtils.degToRad(52)),Math.cos(THREE.MathUtils.degToRad(52)));
+RAW_MUA.forEach(m=>{const d=DEV_DIR.clone().applyQuaternion(jaw.quaternion.clone().invert()).applyQuaternion(m.qg.clone().invert());
+  m.qd=m.qg.clone().multiply(new THREE.Quaternion().setFromAxisAngle(UPY,Math.atan2(d.x,d.z)-Math.PI/4));});
+const markers=RAW_MUA.map((m,k)=>{const g=makeMarker(k);g.userData.q0=m.qd.clone();g.quaternion.copy(m.qd);g.position.copy(m.t);jaw.add(g);return g;});
+const omarkers=RAW_MUA.map((m,k)=>{const g=makeMarker(k,MAT.optor);g.quaternion.copy(m.qd);g.position.copy(m.t);jaw.add(g);return g;});
+const gums=RAW_MUA.map(m=>{const g=new THREE.Mesh(gumGeo,gumMat);g.quaternion.copy(m.qg);g.position.copy(m.t);jaw.add(g);return g;});
+function gumVis(v){gums.forEach(g=>g.visible=v);}
+const libs=RAW_MUA.map(m=>{const g=new THREE.Mesh(G.das,MAT.lib);g.quaternion.copy(m.qg);g.position.copy(m.t);jaw.add(g);return g;});
+function libMat(mat){libs.forEach(g=>{g.material=mat;});}
+/* punkty wykryte (styl Optor) */
+const ALLDOTS=[];markers.forEach((g,k)=>g.userData.dots.forEach(p=>ALLDOTS.push({k,p,top:p.y>PB+PH-.01})));
+const dotMesh=new THREE.InstancedMesh(new THREE.SphereGeometry(.42,12,8),MAT.green,ALLDOTS.length);dotMesh.frustumCulled=false;jaw.add(dotMesh);
+function setDots(fn){const m=new THREE.Matrix4(),q=new THREE.Quaternion(),s=V(1,1,1),w=V(0,0,0);let n=0;
+  ALLDOTS.forEach((d,i)=>{const sc=fn(d,i);const g=markers[d.k];w.copy(d.p).applyQuaternion(g.quaternion).add(g.position);s.setScalar(Math.max(sc,1e-4));m.compose(w,q,s);dotMesh.setMatrixAt(i,m);});
+  dotMesh.instanceMatrix.needsUpdate=true;}
+
+/* ---------- łącznik MUA i części (widok rozłożony) ---------- */
+const muaGeo=new THREE.LatheGeometry([[0,-9],[1.05,-9],[1.15,-8.6],[1.15,-5.2],[1.65,-4.8],[1.75,-2.6],[2.0,-2.4],[2.0,0],[1.25,0.15],[1.05,1.4],[0.55,1.45],[0.55,0.6],[0,0.6]].map(p=>new THREE.Vector2(p[0],p[1])),64);
+muaGeo.computeVertexNormals();
+const parts=new THREE.Group();scene.add(parts);
+const pImpl=new THREE.Mesh(G.impl,MAT.ti);pImpl.position.y=-2.6;parts.add(pImpl);
+const pMua=new THREE.Mesh(muaGeo,MAT.ti);parts.add(pMua);
+const pMk=makeMarker(2);parts.add(pMk);
+
+/* ---------- głowica skanera IOS (poglądowa, półprzezroczysta) ---------- */
+const ios=new THREE.Group();scene.add(ios);
+{const m=new THREE.MeshPhysicalMaterial({color:0xf4f4f4,roughness:.25,clearcoat:1,transparent:true,opacity:.55,depthWrite:false});
+ const tip=new THREE.Mesh(new RoundedBoxGeometry(24,10,14,4,3),m);tip.position.set(-6,9,0);ios.add(tip);
+ const neck=new THREE.Mesh(new THREE.CylinderGeometry(6.5,9,120,32,1,true),m);neck.rotation.z=Math.PI/2+0.28;neck.position.set(-74,26,0);ios.add(neck);
+ const win=new THREE.Mesh(new THREE.PlaneGeometry(13,10),new THREE.MeshBasicMaterial({color:0x00b3b0,transparent:true,opacity:.75}));win.rotation.x=-Math.PI/2;win.position.set(0,3.9,0);ios.add(win);
+ const cone=new THREE.Mesh(new THREE.ConeGeometry(9,8,4,1,true),new THREE.MeshBasicMaterial({color:0x00c2bd,transparent:true,opacity:.16,depthWrite:false,blending:THREE.AdditiveBlending,side:THREE.DoubleSide}));cone.rotation.y=Math.PI/4;cone.position.y=0;ios.add(cone);}
+/* ścieżka po grzbiecie (układ pliku): od tyłu lewej strony do tyłu prawej */
+const ridge=new THREE.CatmullRomCurve3([V(-27,-6,-3),...[...RAW_MUA].sort((a,b)=>a.c.x-b.c.x).map(m=>V(m.c.x,-6,m.c.z)),V(27,-6,0)],false,'centripetal');
+
+/* ---------- 3Dots: model urządzenia wg zdjęć producenta (235 × 120 × 150 mm) ---------- */
+const dev=new THREE.Group();scene.add(dev);
+const lensObjs=[],ledMats=[];
+{const body=new THREE.Mesh(new RoundedBoxGeometry(182,92,112,6,16),MAT.device);body.position.set(0,-28,0);dev.add(body);
+ const hump=new THREE.Mesh(new RoundedBoxGeometry(108,80,104,6,22),MAT.device);hump.position.set(14,32,-4);dev.add(hump);
+ const gl=new THREE.Mesh(new RoundedBoxGeometry(30,112,46,5,13),MAT.device);gl.position.set(-104,-18,10);dev.add(gl);
+ const gr=new THREE.Mesh(new RoundedBoxGeometry(28,98,46,5,12),MAT.device);gr.position.set(104,-22,-26);dev.add(gr);
+ const btn=new THREE.Mesh(new THREE.CylinderGeometry(9,9.5,7,32),MAT.black);btn.position.set(-104,40,10);dev.add(btn);
+ const st=new THREE.Mesh(new THREE.CylinderGeometry(3.2,3.2,3,24),new THREE.MeshBasicMaterial({color:0x3cff6a}));st.position.set(-62,19,24);dev.add(st);
+ [-44,44].forEach(x=>{const g=new THREE.Group();g.position.set(x,-40,56);
+   const bez=new THREE.Mesh(new THREE.CylinderGeometry(20,21,6,48),MAT.device);bez.rotation.x=Math.PI/2;g.add(bez);
+   const ring=new THREE.Mesh(new THREE.TorusGeometry(14.5,2.2,16,48),MAT.black);ring.position.z=3.4;g.add(ring);
+   const lens=new THREE.Mesh(new THREE.SphereGeometry(13,40,20,0,Math.PI*2,0,Math.PI/2),MAT.glass);lens.rotation.x=Math.PI/2;lens.scale.set(1,.35,1);lens.position.z=2;g.add(lens);
+   const o=new THREE.Object3D();o.position.z=8;g.add(o);lensObjs.push(o);dev.add(g);});
+ [[0,-40,56,15],[14,40,48,17]].forEach(a=>{const m=MAT.led.clone();ledMats.push(m);const l=new THREE.Mesh(new THREE.CylinderGeometry(a[3],a[3],5,48),m);l.rotation.x=Math.PI/2;l.position.set(a[0],a[1],a[2]);dev.add(l);});}
+/* promienie triangulacji */
+const RAYS=markers.length*2;
+const rayGeo=new THREE.BufferGeometry();rayGeo.setAttribute('position',new THREE.BufferAttribute(new Float32Array(RAYS*6),3));
+{const c=new Float32Array(RAYS*6),a=new THREE.Color('#0085C1'),b=new THREE.Color('#00d1c4');for(let i=0;i<RAYS;i++){c.set([a.r,a.g,a.b,b.r,b.g,b.b],i*6);}rayGeo.setAttribute('color',new THREE.BufferAttribute(c,3));}
+const rays=new THREE.LineSegments(rayGeo,new THREE.LineBasicMaterial({vertexColors:true,transparent:true,opacity:.0,blending:THREE.AdditiveBlending,depthWrite:false}));rays.frustumCulled=false;scene.add(rays);
+
+/* ---------- kalibracja: listwa, płytka kalibracyjna i 3 podstawki o różnych kątach (wg zdjęcia producenta; kąty poglądowe) ---------- */
+const kal=new THREE.Group();scene.add(kal);
+const KANG=[0,12,-24].map(a=>THREE.MathUtils.degToRad(a)),KPX=170,KPH=46,KTOP=KPH+8,KYAW=THREE.MathUtils.degToRad(14);
+let kPlate,kFace;const kPosts=[];
+{const blk=MAT.black;
+ const rail=new THREE.Mesh(new RoundedBoxGeometry(420,8,64,2,2.5),blk);rail.position.y=4;kal.add(rail);
+ [[-195,0],[195,0]].forEach(p=>{const f=new THREE.Mesh(new RoundedBoxGeometry(46,8,110,2,3),blk);f.position.set(p[0],4,0);kal.add(f);});
+ const dpost=new THREE.Mesh(new THREE.CylinderGeometry(15,17,62,40),blk);dpost.position.set(-175,39,0);kal.add(dpost);
+ KANG.forEach((a,i)=>{const g=new THREE.CylinderGeometry(20,22,KPH,48,4);const p=g.attributes.position;
+   for(let j=0;j<p.count;j++){const y=p.getY(j);if(y>0)p.setY(j,y+Math.tan(a)*p.getX(j));}g.computeVertexNormals();
+   const m=new THREE.Mesh(g,new THREE.MeshPhysicalMaterial({color:[0x1c1d20,0x24262a,0x2c2f34][i],roughness:.45,metalness:.2,clearcoat:.3}));kPosts.push(m);kal.add(m);});
+ const tex=(()=>{const c=document.createElement('canvas');c.width=640;c.height=400;const g=c.getContext('2d');g.fillStyle='#f6f6f4';g.fillRect(0,0,640,400);
+   g.strokeStyle='#202124';g.lineWidth=2.2;for(let r=0;r<20;r++)for(let k=0;k<32;k++){g.beginPath();g.arc(16+k*19.6,14+r*19.3,5.4,0,Math.PI*2);g.stroke();}
+   g.fillStyle='#202124';[[302,172],[338,172],[302,208]].forEach(p=>{g.beginPath();g.arc(p[0],p[1],7,0,Math.PI*2);g.fill();});
+   const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return t;})();
+ /* kPlate: punkt obrotu w środku skośnej górnej powierzchni podstawki; płytka z trzpieniem stoi na niej */
+ kPlate=new THREE.Group();kPlate.rotation.order='YZX';kal.add(kPlate);
+ const kIn=new THREE.Group();kIn.position.y=66;kPlate.add(kIn);
+ const fr=new THREE.Mesh(new RoundedBoxGeometry(12,104,168,3,3),blk);kIn.add(fr);
+ kFace=new THREE.Mesh(new THREE.PlaneGeometry(156,96),new THREE.MeshStandardMaterial({map:tex,roughness:.6,emissive:0xffffff,emissiveMap:tex,emissiveIntensity:0}));
+ kFace.rotation.y=-Math.PI/2;kFace.position.x=-6.2;kIn.add(kFace);
+ const neck=new THREE.Mesh(new THREE.CylinderGeometry(10,12,16,32),blk);neck.position.y=-58;kIn.add(neck);
+ const disc=new THREE.Mesh(new THREE.CylinderGeometry(19,19,2,48),blk);disc.position.y=1;kPlate.add(disc);}
+const KPARK=[V(120,KPH/2+4,95),V(170,KPH/2+4,105),V(220,KPH/2+4,95)];
+const hudK=document.getElementById('hudk'),hKa=document.getElementById('hudka'),hKb=document.getElementById('hudkb'),hKc=document.getElementById('hudkc');
+
+/* ---------- etykiety DOM ---------- */
+let labels=[];
+function setLabels(list){LBL.innerHTML='';labels=list.map(l=>{const e=document.createElement('div');e.className='l3'+(l.left?' left':'');e.innerHTML='<i></i><em></em><span>'+l.t+'</span>';LBL.appendChild(e);return Object.assign({e},l);});}
+function updateLabels(t){const w=stage.clientWidth,h=stage.clientHeight,v=V(0,0,0);
+  labels.forEach(l=>{l.p(v);v.project(camera);const on=l.show(t)&&v.z<1;l.e.classList.toggle('on',on);
+    l.e.style.transform='translate('+((v.x+1)/2*w-(l.left?l.e.offsetWidth-3:3))+'px,'+((1-v.y)/2*h-l.e.offsetHeight/2)+'px)';});}
+const wp=(obj,local)=>out=>out.copy(local).applyMatrix4(obj.matrixWorld);
+
+/* ---------- kamera ---------- */
+const look=V(0,0,0);
+function cam(keys,t){let i=0;while(i<keys.length-1&&t>keys[i+1][0])i++;const a=keys[i],b=keys[Math.min(i+1,keys.length-1)];const f=b===a?1:ss(a[0],b[0],t);
+  camera.position.set(...a[1]).lerp(V(...b[1]),f);look.set(...a[2]).lerp(V(...b[2]),f);camera.lookAt(look);}
+
+/* ---------- sceny ---------- */
+function hideAll(){[jaw,parts,ios,dev,rays,shadow,kal].forEach(o=>o.visible=false);jawGhost.visible=false;dotMesh.visible=false;
+  gums.forEach(g=>{g.visible=false;g.material=gumMat;});hudK.classList.remove('on');
+  markers.forEach(m=>{m.visible=false;const pr=m.userData.pr;pr.visible=true;pr.position.y=PB+PH/2;pr.rotation.set(0,0,0);m.userData.base.visible=true;});
+  omarkers.forEach(m=>m.visible=false);libs.forEach(m=>m.visible=false);libMat(MAT.lib);MAT.lib.opacity=1;
+  const c=SC.cad;if(c.ghosts){c.ghosts.forEach(g=>g.visible=false);}
+  libs.forEach((g,k)=>{g.position.copy(RAW_MUA[k].t);g.quaternion.copy(RAW_MUA[k].qg);});
+  jawMesh.material=jawMat;jawMat.opacity=1;jawMat.depthWrite=true;jawMesh.visible=true;}
+const muaW=k=>out=>out.copy(RAW_MUA[k].c).applyMatrix4(jaw.matrixWorld);
+const mkTop=k=>out=>out.set(0,PB+PH,0).applyQuaternion(markers[k].quaternion).add(markers[k].position).applyMatrix4(jaw.matrixWorld);
+const baseW=k=>out=>out.set(0,4,0).applyQuaternion(markers[k].quaternion).add(markers[k].position).applyMatrix4(jaw.matrixWorld);
+function placeMarkers(){markers.forEach((m,k)=>{m.position.copy(RAW_MUA[k].t);m.quaternion.copy(m.userData.q0);});}
+const SC={
+ czesci:{dur:9,target:[0,2,0],
+  enter(){parts.visible=true;camera.fov=30;camera.updateProjectionMatrix();
+   setLabels([{t:'Marker PEEK z kodami',p:wp(pMk.userData.pr,V(PW/2,1,0)),show:t=>t>3.6},
+     {t:'Podstawa tytanowa na MUA',p:wp(pMk,V(-3,2.4,0)),show:t=>t>3.9,left:true},
+     {t:'Łącznik MUA',p:wp(pMua,V(2,-1.4,0)),show:t=>t>4.2},
+     {t:'Implant (system klienta)',p:wp(pImpl,V(-2.4,-6,0)),show:t=>t>4.5,left:true}]);},
+  update(t){const e=ss(1,3.4,t);pImpl.position.y=-2.6-e*9;pMk.position.y=e*7;pMk.userData.pr.position.y=PB+PH/2+e*7;
+   parts.rotation.y=-0.5+t*0.16;parts.position.set(4,-4,0);
+   cam([[0,[0,6,160],[0,0,0]],[9,[0,4,148],[0,-1,0]]],t);}},
+ ios:{dur:9,target:[0,-4,0],
+  enter(){jaw.visible=true;shadow.visible=true;jawMesh.material=jawRevMat;jawGhost.visible=true;ios.visible=true;camera.fov=30;camera.updateProjectionMatrix();
+   placeMarkers();markers.forEach(m=>{m.userData.pr.visible=false;});
+   setLabels([{t:'Podstawy tytanowe na MUA',p:baseW(1),show:t=>t>5.4,left:true},{t:'Tkanki miękkie: skan IOS',p:out=>out.set(2,-4,-4),show:t=>t>8.3}]);},
+  update(t){const u=ss(.5,7.8,t);const p=ridge.getPointAt(u);revU.uRev.value=t>=8.6?xr[1]+5:p.x+1.2;
+   markers.forEach((m,k)=>{m.visible=revU.uRev.value>RAW_MUA[k].c.x+1.5;gums[k].visible=m.visible;});
+   const wpnt=p.clone().applyMatrix4(jaw.matrixWorld);
+   ios.position.copy(wpnt).add(V(0,12,0));const out=V(wpnt.x,0,wpnt.z).normalize();ios.rotation.set(0,Math.atan2(-out.z,out.x)+Math.PI,0);
+   ios.traverse(o=>{if(o.material&&o.material.opacity!==undefined&&o.material.transparent){o.material.userData.o0=o.material.userData.o0||o.material.opacity;o.material.opacity=o.material.userData.o0*(1-ss(7.9,8.6,t));}});
+   jawGhost.material.opacity=.1*(1-ss(8,8.8,t));
+   cam([[0,[-42,78,92],[0,-3,0]],[4.5,[0,84,96],[0,-3,0]],[9,[38,74,90],[0,-3,0]]],t);}},
+ montaz:{dur:10,target:[0,4,0],
+  enter(){jaw.visible=true;shadow.visible=true;placeMarkers();markers.forEach(m=>m.visible=true);gumVis(true);camera.fov=30;camera.updateProjectionMatrix();
+   setLabels([{t:'W diament: 2 ściany do 3Dots',p:mkTop(4),show:t=>t>6.6},{t:'Hex 1,25 · maks. 10 N·cm',p:mkTop(1),show:t=>t>7.1,left:true},{t:'Numer = kropki na górze (0–4)',p:mkTop(2),show:t=>t>7.6}]);},
+  update(t){markers.forEach((g,k)=>{const t0=.5+k*1.05,e=ss(t0,t0+1.5,t),pr=g.userData.pr;pr.position.y=PB+PH/2+(1-e)*24;pr.rotation.y=(1-e)*Math.PI*3;pr.visible=t>t0-.05;});
+   cam([[0,[0,70,104],[6,4,0]],[6.4,[10,96,86],[2,4,0]],[10,[0,104,80],[0,4,0]]],t);}},
+ kalib:{dur:15,target:[0,90,0],
+  enter(){kal.visible=true;dev.visible=true;rays.visible=true;camera.fov=30;camera.updateProjectionMatrix();
+   dev.position.set(-175,144,0);dev.lookAt(KPX,100,0);dev.updateMatrixWorld(true);
+   setLabels([{t:'3Dots',p:wp(dev,V(0,82,0)),show:t=>t>.5},{t:'Płytka kalibracyjna',p:wp(kFace,V(0,48,0)),show:t=>t>.9},{t:'Podstawka (3 kąty)',p:o=>o.set(KPX+22,30,0),show:t=>t>1.3}]);
+   const a=rayGeo.attributes.position.array;a.fill(0);rayGeo.attributes.position.needsUpdate=true;},
+  update(t){const RG=[1.6,2.6,3.6],n=[0,1,2].reduce((s,w)=>s+RG.filter(d=>t>=.4+w*4.7+d).length,0);
+   const w=Math.min(2,Math.max(0,Math.floor((t-.4)/4.7))),s0=.4+w*4.7,e=ss(s0,s0+1,t),u=t-s0;
+   /* zmiana podstawki: płytka unosi się, stara podstawka odjeżdża, nowa wjeżdża, płytka siada na nowej */
+   const at=V(KPX,KPH/2+8,0);
+   kPosts.forEach((p,i)=>{let pos=KPARK[i];if(i===w)pos=w===0?at:KPARK[i].clone().lerp(at,ss(s0+.25,s0+.85,t));if(i===w-1)pos=at.clone().lerp(KPARK[i],ss(s0+.05,s0+.6,t));p.position.copy(pos);});
+   const lift=w===0?0:Math.sin(Math.PI*ss(s0,s0+1,t))*34;
+   const ang=w===0?KANG[0]:THREE.MathUtils.lerp(KANG[w-1],KANG[w],ss(s0+.3,s0+.9,t));
+   /* 3 rejestracje: środek, płytka lekko w prawo, lekko w lewo, potem powrót do środka */
+   const yaw=-KYAW*ss(1.85,2.35,u)+2*KYAW*ss(2.85,3.35,u)-KYAW*ss(3.85,4.35,u);
+   kPlate.position.set(KPX,KTOP+lift,0);kPlate.rotation.set(0,yaw,ang);
+   let fl=0;for(let k=0;k<3;k++){RG.forEach(d=>{const x=t-(.4+k*4.7+d);if(x>=0&&x<.45)fl=Math.max(fl,1-x/.45);});}
+   ledMats.forEach(m=>m.emissiveIntensity=.15+fl*2.4);kFace.material.emissiveIntensity=fl*.35;
+   kal.updateMatrixWorld(true);
+   const a=rayGeo.attributes.position.array,lp=V(0,0,0),cp=V(0,0,0);let i=0;
+   [[-74,-44],[74,-44],[74,44],[-74,44]].forEach(c=>{cp.set(c[0],c[1],0.1);kFace.localToWorld(cp);lensObjs.forEach(o=>{lp.setFromMatrixPosition(o.matrixWorld);a.set([lp.x,lp.y,lp.z,cp.x,cp.y,cp.z],i*6);i++;});});
+   rayGeo.attributes.position.needsUpdate=true;rays.material.opacity=fl*.8;
+   hudK.classList.toggle('on',t>.3);
+   if(n>=9){hKa.innerHTML='<span class="ok">Kalibracja zakończona</span> · 9 / 9';hKb.textContent='3 podstawki × 3 rejestracje';}
+   else{const r=u<2.35?1:u<3.35?2:3;hKa.textContent='Podstawka '+(w+1)+' z 3 · rejestracja '+r+' z 3';hKb.textContent='Płytka: '+['środek','lekko w prawo','lekko w lewo'][r-1]+' · rejestracje: '+n+' / 9';}
+   hKc.style.width=(n/9*100)+'%';
+   cam([[0,[-430,300,640],[40,75,0]],[15,[-280,280,720],[40,75,0]]],t);}},
+ /* najpierw zdjęcie (przycisk 2 razy): rejestracja kropek na górnych ścianach markerów, potem akwizycja po łuku */
+ akwizycja:{dur:14.5,target:[0,4,0],
+  enter(){jaw.visible=true;shadow.visible=true;placeMarkers();markers.forEach(m=>m.visible=true);gumVis(true);dev.visible=true;rays.visible=true;dotMesh.visible=true;camera.fov=30;camera.updateProjectionMatrix();
+   setLabels([{t:'Zdjęcie: przycisk 2 razy',p:wp(dev,V(-120,-20,0)),show:t=>t>.7&&t<1.9,left:true},{t:'Kropki na górnej ścianie = numer markera',p:mkTop(2),show:t=>t>2.5&&t<3.7},
+     {t:'3Dots · ok. 35 cm od łuku',p:wp(dev,V(-120,-20,0)),show:t=>t>4.6&&t<9.3,left:true},{t:'2 kamery: triangulacja',p:wp(dev,V(0,-70,56)),show:t=>t>5.2&&t<9.3}]);},
+  update(t){const az=THREE.MathUtils.degToRad(-15+30*ss(4.4,9.3,t)),el=THREE.MathUtils.degToRad(52),R=350;
+   dev.position.set(R*Math.cos(el)*Math.sin(az),R*Math.sin(el),R*Math.cos(el)*Math.cos(az));dev.lookAt(0,0,0);dev.updateMatrixWorld(true);
+   const x=t-1.4,flash=x>=0&&x<.45?1-x/.45:0;
+   const on=ss(4.3,4.7,t)*(1-ss(9.3,9.9,t));ledMats.forEach(m=>m.emissiveIntensity=.15+Math.max(on*2.2,flash*2.6));
+   const a=rayGeo.attributes.position.array,lp=V(0,0,0),mp=V(0,0,0);let i=0;
+   markers.forEach((g,k)=>{mkTop(k)(mp);if(on>0)mp.y-=4;lensObjs.forEach(o=>{lp.setFromMatrixPosition(o.matrixWorld);a.set([lp.x,lp.y,lp.z,mp.x,mp.y,mp.z],i*6);i++;});});
+   rayGeo.attributes.position.needsUpdate=true;rays.material.opacity=Math.max(flash*.8,on*(.55+.25*Math.sin(t*9)));
+   const topOn=ss(1.5,1.9,t)*(1-ss(3.7,4.1,t));
+   setDots(d=>d.top?Math.max(topOn,ss(10.4+d.k*.55,10.7+d.k*.55,t)):ss(10.4+d.k*.55,10.7+d.k*.55,t));
+   cam([[0,[930,200,250],[0,95,90]],[1.7,[930,200,250],[0,95,90]],[2.5,[0,100,52],[0,2,0]],[3.7,[6,98,56],[0,2,0]],[4.5,[930,200,250],[0,95,90]],[9.3,[900,230,350],[0,95,90]],[10.3,[0,74,98],[0,2,0]],[14.5,[24,70,96],[0,2,0]]],t);
+   hud(t);}},
+ optor:{dur:8.5,target:[0,0,0],
+  enter(){jaw.visible=true;jawMesh.visible=false;shadow.visible=false;dotMesh.visible=true;placeMarkers();camera.fov=30;camera.updateProjectionMatrix();
+   setLabels([{t:'Punkty zmierzone przez 3Dots',p:mkTop(0),show:t=>t>.6&&t<2.4,left:true},{t:'Skanbody 3Dots w pozycjach',p:mkTop(4),show:t=>t>2.6&&t<4.8},{t:'Skanbody biblioteki wybranej ręcznie',p:muaW(4),show:t=>t>5}]);},
+  update(t){setDots((d,i)=>ss(.2+i/ALLDOTS.length*1.4,.5+i/ALLDOTS.length*1.4,t)*(1-ss(3.4,4.4,t)));dotMesh.visible=t<4.5;
+   const B=ss(2.3,3.1,t)*(1-ss(4.6,5.4,t));MAT.optor.opacity=B;omarkers.forEach(m=>m.visible=B>.01);
+   const C=ss(4.8,5.6,t);MAT.lib.opacity=C;libs.forEach(m=>m.visible=C>.01);
+   const ph=t<2.3?1:t<4.8?2:3;if(ph!==this._ph){this._ph=ph;window.KTI_UI&&KTI_UI.phase(6,ph);}
+   cam([[0,[0,96,44],[0,0,4]],[8.5,[30,88,54],[0,0,4]]],t);}},
+ cad:{dur:13,target:[0,0,2],
+  /* pozycje z 3Dots nałożone na skan IOS: po dopasowaniu całego zestawu każda podstawa IOS różni się od pozycji z fotogrametrii
+     (różnice poglądowe, powiększone dla czytelności); skanbody biblioteki stają w pozycjach z 3Dots */
+  enter(){jaw.visible=true;shadow.visible=true;jawMesh.material=jawMat;camera.fov=28;camera.updateProjectionMatrix();
+   placeMarkers();markers.forEach(m=>{m.visible=true;m.userData.pr.visible=false;});gumVis(true);
+   if(!this.ghosts){const eg=new THREE.EdgesGeometry(G.sb,25),em=new THREE.LineBasicMaterial({color:0x0085C1,transparent:true});this.em=em;
+     const D=[[.55,-.25,.4,1.8],[-.45,.3,.5,-2.2],[.4,.35,-.55,2.4],[-.5,-.2,-.4,-1.6],[.35,-.4,.45,2.0]];
+     this.fin=RAW_MUA.map((m,k)=>{const d=D[k],ax=V(d[1],d[2],d[0]).normalize();
+       return {p:m.t.clone().add(V(d[0],d[1]*.6,d[2])),q:new THREE.Quaternion().setFromAxisAngle(ax,THREE.MathUtils.degToRad(d[3])).multiply(m.qg)};});
+     this.cen=RAW_MUA.reduce((s,m)=>s.add(m.t),V(0,0,0)).multiplyScalar(1/RAW_MUA.length);
+     this.ghosts=RAW_MUA.map(()=>{const g=new THREE.Mesh(G.sb,MAT.ghost);g.add(new THREE.LineSegments(eg,em));g.renderOrder=2;jaw.add(g);return g;});}
+   this.ghosts.forEach(g=>g.visible=true);
+   const k=1,m=RAW_MUA[k];const c=m.c.clone().addScaledVector(m.a,-1).applyMatrix4(jaw.matrixWorld);this.c=c;
+   setLabels([{t:'Pozycje z 3Dots (cały łuk)',p:o=>this.ghosts[0].getWorldPosition(o),show:t=>t>.5&&t<3.6,left:true},
+     {t:'Podstawa ze skanu IOS',p:o=>o.copy(c).add(V(3.4,-1.2,0)),show:t=>t>4.4&&t<7},
+     {t:'Pozycja z 3Dots: różnica widoczna',p:o=>this.ghosts[1].getWorldPosition(o).add(V(-3,5,0)),show:t=>t>4.8&&t<7,left:true},
+     {t:'Skanbody biblioteki w pozycji z 3Dots',p:o=>o.copy(c).add(V(3.4,1,0)),show:t=>t>7.6&&t<9.2},{t:'Model STL do CAD',p:muaW(3),show:t=>t>10.6}]);},
+  update(t){const e=ss(.6,3.6,t),T=V(0,-16,8).multiplyScalar(1-e),R=new THREE.Quaternion().setFromAxisAngle(V(0,1,0),.22*(1-e));
+   const pul=ss(4.2,4.6,t)*(1-ss(6.6,7.2,t))*(.5+.5*Math.sin(t*6));
+   this.ghosts.forEach((g,k)=>{const f=this.fin[k];g.position.copy(f.p).sub(this.cen).applyQuaternion(R).add(this.cen).add(T);g.quaternion.copy(R).multiply(f.q);g.visible=t<8.2;});
+   MAT.ghost.opacity=(.38+pul*.3)*(1-ss(7.4,8.2,t));this.em.opacity=1-ss(7.4,8.2,t);
+   markers.forEach(g=>g.visible=t<8);
+   const L=ss(7.4,8.2,t);libs.forEach((g,k)=>{g.visible=L>.01;g.position.copy(this.fin[k].p);g.quaternion.copy(this.fin[k].q);});
+   const E=ss(9.4,10.6,t);
+   if(E<=0){jawMesh.material=jawMat;libMat(MAT.lib);MAT.lib.opacity=L;gums.forEach(g=>g.material=gumMat);}
+   else{jawMesh.material=MAT.stl;MAT.stl.opacity=1;libMat(MAT.stl);gums.forEach(g=>g.material=MAT.stl);MAT.stl.color.set('#d5928b').lerp(new THREE.Color('#6f9fd8'),E);}
+   const ph=t<3.6?1:t<7.4?2:t<9.4?3:4;if(ph!==this._ph){this._ph=ph;window.KTI_UI&&KTI_UI.phase(8,ph);}
+   const c=this.c;cam([[0,[26,92,70],[0,0,2]],[3.6,[20,86,74],[0,0,2]],[4.6,[c.x+20,c.y+20,c.z+30],[c.x,c.y,c.z]],[8.4,[c.x+14,c.y+18,c.z+32],[c.x,c.y,c.z]],[10.4,[30,88,64],[0,0,2]],[13,[38,84,70],[0,0,2]]],t);}}
+};
+const hudA=document.getElementById('hud4'),hA=document.getElementById('hud4a'),hB=document.getElementById('hud4b'),hC=document.getElementById('hud4c');
+function hud(t){hudA.classList.toggle('on',t>.3);
+  if(t<.9){hA.textContent='Gotowy';hB.textContent='Optor L Ultra · Scan Implant Positions';hC.style.width='0';}
+  else if(t<1.6){hA.textContent='Zdjęcie · przycisk 2 razy';hB.textContent='rejestracja kropek na górnych ścianach markerów';hC.style.width='0';}
+  else if(t<4.3){hA.innerHTML='<span class="ok">Zdjęcie zapisane</span> · numery markerów 0–4';hB.textContent='software wie, który marker stoi na której pozycji';hC.style.width='0';}
+  else if(t<9.4){hA.innerHTML='Akwizycja · odległość: <span class="ok">OPTYMALNA</span>';hB.textContent='ruch po łuku ok. ±15° · ok. 35 cm';hC.style.width=(ss(4.4,9.4,t)*100)+'%';}
+  else{const n=Math.min(5,Math.max(0,Math.floor((t-10.4)/.55)+1));hA.innerHTML=(n>=5?'<span class="ok">Pozycje implantów zarejestrowane</span>':'Identyfikacja skanbody')+' · znalezione: '+n+' / 5';hB.textContent='Scan Abutments Found: '+n;hC.style.width='100%';}}
+
+/* ---------- pętla ---------- */
+const controls=new OrbitControls(camera,canvas);controls.enabled=false;controls.enableDamping=true;controls.enablePan=false;controls.minDistance=25;controls.maxDistance=700;
+let active=null,t0=0,done=false,paused=false,frameT=null,raf=0;
+function size(){const w=stage.clientWidth,h=stage.clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
+new ResizeObserver(size).observe(stage);size();
+function loop(now){raf=requestAnimationFrame(loop);if(!active||paused||document.hidden)return;
+  const S=SC[active];let t=frameT!==null?frameT:(now-t0)/1000;
+  if(!done){S.update(Math.min(t,S.dur));if(t>=S.dur&&(frameT===null||frameT>=S.dur)){done=true;controls.target.set(...(S.target||[0,0,0]));controls.enabled=true;controls.update();window.KTI_UI&&KTI_UI.orbit(true);}}
+  else controls.update();
+  scene.updateMatrixWorld();updateLabels(Math.min(t,S.dur));renderer.render(scene,camera);}
+window.KTI3D={
+  show(k,o){o=o||{};active=k;done=false;paused=false;controls.enabled=false;window.KTI_UI&&KTI_UI.orbit(false);hideAll();hudA.classList.remove('on');SC[k]._ph=0;SC[k].enter();
+    frameT=o.frame!=null?o.frame*SC[k].dur:(o.rm?SC[k].dur:null);t0=performance.now();if(!raf)raf=requestAnimationFrame(loop);},
+  hide(){active=null;LBL.innerHTML='';controls.enabled=false;},
+  pause(p){paused=!!p;if(!p&&active){}}
+};
+if(/[?&]debug\b/.test(location.search))window.__kti={camera,controls,jaw,RAW_MUA};
+window.dispatchEvent(new Event('kti3d-ready'));
+</script>
+</body>
+</html>
