@@ -89,6 +89,8 @@ a{color:inherit}
 .panel ul.do li:before{content:"";width:8px;height:8px;margin-top:7px;background:var(--ink)}
 .panel ul.warn li{display:grid;grid-template-columns:18px 1fr}
 .panel ul.warn li:before{content:"";width:8px;height:8px;margin-top:7px;border:1px solid var(--g2)}
+.panel ul.imp li{display:grid;grid-template-columns:22px 1fr;font-weight:400;background:var(--panel);border-left:3px solid var(--blue);padding-left:12px;padding-right:10px}
+.panel ul.imp li:before{content:"!";color:var(--blue);font-weight:600}
 .panel b{font-weight:600}
 
 /* checklist */
@@ -383,7 +385,7 @@ footer .legal{grid-column:1/-1;border-top:1px solid var(--g1);padding-top:16px;c
 
           <!-- 5 skan z central x -->
           <div class="scene s5 archwrap" data-i="5">
-            <span class="badge">Jedno przejście po okręgu przez końcówki</span>
+            <span class="badge">Start i koniec na tkankach miękkich</span>
           </div>
 
           <!-- 6 caps -->
@@ -412,7 +414,7 @@ footer .legal{grid-column:1/-1;border-top:1px solid var(--g1);padding-top:16px;c
               <div class="err" style="--i:1"><em>02</em><b>Za dużo CAPS</b><span>zwykle 1–2 na stronę</span></div>
               <div class="err" style="--i:2"><em>03</em><b>CAPS na innym scanbody</b><span>tylko Scanbody Reference</span></div>
               <div class="err" style="--i:3"><em>04</em><b>Brak ponownego dokręcenia</b><span>po ustawieniu ramienia i CAPS</span></div>
-              <div class="err" style="--i:4"><em>05</em><b>Zły śrubokręt lub moment</b><span>Central X: Hex 1,20 · 5 N·cm</span></div>
+              <div class="err" style="--i:4"><em>05</em><b>Zła kolejność momentów</b><span>najpierw Reference 10 N·cm, potem Central X 5 N·cm</span></div>
               <div class="err" style="--i:5"><em>06</em><b>Scanbody niezgodny z MU</b><span>sprawdź kod kompatybilności</span></div>
             </div>
           </div>
@@ -482,8 +484,8 @@ function ol(items){return '<ol>'+items.map(function(t){return '<li><span>'+t+'</
 /* ---------- checklista ---------- */
 var CHECK = [
   ['Przed',['System implantu i platforma multi-unit ustalone','Kod biblioteki / kompatybilności sprawdzony (LIBRARY_CODES, katalog DAS)','Scanbody Reference zgodny z platformą multi-unit','Śrubokręt Hex 1,20 i śrubokręt do Scanbody Reference','CAPS (Regular / Wide, 3,8 / 6 / 8 mm), jeśli rejestrujesz zwarcie','Biblioteki DAS CX zainstalowane w Exocad laboratorium']],
-  ['W trakcie',['Skan dziąsła z widocznymi multi-unitami: zigzag albo ciągły','Scanbody Reference przykręcone (5 N·cm wg nazwy produktu)','Central X przykręcone Hex 1,20 (5 N·cm wg nazwy produktu)','Końcówki wszystkich ramion skierowane do środka, jak najbliżej siebie','Skan z Central X: jednym przejściem po okręgu przez końcówki ramion','CAPS tylko przy rejestracji zwarcia: poluzuj, dopasuj, załóż, dokręć, skanuj']],
-  ['Po',['Best fit w Exocad z biblioteką DAS CX, dopasowanie sprawdzone','Elementy zdemontowane','Pytania techniczne przekazane do wsparcia DAS w KTI']]
+  ['W trakcie',['Skan dziąsła z widocznymi multi-unitami: zigzag albo ciągły','Scanbody Reference dokręcone momentem 10 N·cm','Śruba Central X dokręcona Hex 1,20 momentem 5 N·cm (po Reference)','Końcówki wszystkich ramion skierowane do środka, jak najbliżej siebie, bez kontaktu','Skan z Central X: start i koniec na tkankach miękkich, jednym ciągłym przejściem przez końcówki ramion','CAPS tylko przy rejestracji zwarcia: poluzuj, dopasuj, załóż, dokręć, skanuj']],
+  ['Po',['Best fit obu skanów po tkankach miękkich, potem biblioteka DAS CX w Exocad','Elementy zdemontowane','Pytania techniczne przekazane do wsparcia DAS w KTI']]
 ];
 var CK_TOTAL = CHECK.reduce(function(a,g){return a+g[1].length;},0);
 var STORE='kti-central-x-checklista-v2';
@@ -506,7 +508,7 @@ var STEPS = [
    'Zwiększa liczbę punktów referencyjnych i zbliża je do siebie, więc skaner rzadziej traci referencję między implantami.',
    'Jedna geometria do wszystkich Scanbody Reference. Scanbody Reference: 56 kompatybilności.',
    'Współpracuje ze wszystkimi dostępnymi na rynku skanerami wewnątrzustnymi.',
-   'Pełny workflow: skan dziąsła, skan z Central X, best fit w CAD. CAPS tylko przy rejestracji zwarcia.']),
+   'Pełny workflow: skan dziąsła z multi-unitami, skan z Central X (start i koniec na tkankach miękkich), best fit obu skanów w CAD, potem dopasowanie biblioteki CX. CAPS tylko przy rejestracji zwarcia.']),
   dur:8500, tl:[[100,1],[700,2],[1500,3],[4800,4]]},
 
  {chip:'Przygotowanie',title:'Przygotowanie i identyfikacja',lead:'Bez systemu implantu i platformy multi-unit nie dobierzesz elementów. Zacznij od danych przypadku.',
@@ -514,6 +516,7 @@ var STEPS = [
    'Ustal system implantu i platformę multi-unit. Scanbody Reference łączy się z multi-unit (DAS MU albo kompatybilny MU).',
    'Odczytaj kod kompatybilności systemu w LIBRARY_CODES (np. Neodent Multiunit Mini: DAS_0025) i dobierz Scanbody Reference z tym kodem. W razie wątpliwości przypisanie potwierdza wsparcie DAS w KTI.',
    'Wersje Scanbody Reference na DAS Multi-Unit (54.312.209.31-2, 54.322.209.31-2, 54.322.210.31-2) współpracują z Central X.',
+   'Momenty: Scanbody Reference 10 N·cm, śruba Central X 5 N·cm. Zawsze najpierw Reference.',
    'CAPS (Regular albo Wide, 3,8 / 6 / 8 mm) przygotuj tylko, jeśli rejestrujesz zwarcie.',
    'Laboratorium: biblioteki DAS CX do Exocad (DAS_0025_CX_PREMIUM, DAS_MU_CX_PREMIUM i analogi).']),
   dur:7000, tl:[[250,1],[1400,2]]},
@@ -529,26 +532,35 @@ var STEPS = [
  {chip:'Scanbody Reference',title:'Montaż DAS Scanbody Reference',lead:'Na każdym multi-unit przykręcasz Scanbody Reference właściwy dla platformy.',
   body:'<h3>Co robisz</h3>'+ul('do',[
    'Przykręć Scanbody Reference śrubokrętem dla danej wersji.',
-   'Moment w nazwie produktu: 5 N·cm (np. „Reference Scanbody R H7 (Hex. 1.27). Comp.0008. 5N·cm”).',
+   'Dokręć Scanbody Reference momentem 10 N·cm, zanim przykręcisz Central X.',
    'Scanbody Reference jest tytanowy, łączy się z multi-unit i upraszcza pracę w przypadkach bezzębnych. Obsługuje CAPS i PEEK Pins.'])+
+   '<h3>Ważne</h3>'+ul('imp',[
+   'Najpierw Scanbody Reference 10 N·cm, potem śruba Central X 5 N·cm. Nigdy nie dokręcaj Scanbody Reference momentem równym lub niższym niż śrubę Central X: Reference może się wtedy poluzować, a Central X zostanie dokręcony, co powoduje problemy w trakcie procedury.',
+   'Scanbody Reference i Central X nie mogą się nigdzie bezpośrednio stykać. Zachowaj szczelinę, żeby uniknąć tarcia i nieprawidłowego osadzenia.'])+
    '<h3>Uwaga</h3>'+ul('warn',[
    'Numer katalogowy musi zgadzać się z platformą multi-unit.']),
   dur:6500, tl:[[200,1],[1500,2],[2500,3],[3800,4]]},
 
- {chip:'Montaż Central X',title:'Montaż i ustawienie Central X',lead:'Central X przykręcasz do Scanbody Reference i obracasz ramiona tak, żeby końcówki wszystkich ramion były skierowane do środka łuku, jak najbliżej siebie.',
+ {chip:'Montaż Central X',title:'Montaż i ustawienie Central X',lead:'Central X przykręcasz do Scanbody Reference i obracasz ramiona tak, żeby końcówki wszystkich ramion były skierowane do środka łuku, jak najbliżej siebie, ale bez kontaktu.',
   body:'<h3>Co robisz</h3>'+ul('do',[
    'Nałóż Central X na Scanbody Reference i przykręć śrubą mocującą Central X.',
-   'Śrubokręt Hex 1,20, moment w nazwie produktu: 5 N·cm.',
+   'Śrubę Central X dokręć śrubokrętem Hex 1,20 momentem 5 N·cm, po dokręceniu Scanbody Reference momentem 10 N·cm.',
    'Ramię obraca się o 360° wokół scanbody.',
-   'Końcówki wszystkich ramion skieruj do środka łuku (do podniebienia), jak najbliżej siebie, w układzie gwiazdy zbiegającej się w centrum, jak na renderach DAS.'])+
+   'Końcówki wszystkich ramion skieruj do środka łuku (do podniebienia), jak najbliżej siebie, w układzie gwiazdy zbiegającej się w centrum, jak na renderach DAS. Końcówki nie mogą się stykać: zachowaj małą szczelinę.'])+
+   '<h3>Ważne</h3>'+ul('imp',[
+   'Nigdy nie dokręcaj śruby Central X mocniej niż Scanbody Reference ani tym samym momentem: Reference 10 N·cm, Central X 5 N·cm. Inaczej Reference może się poluzować, a Central X zostanie dokręcony.',
+   'Scanbody Reference i Central X nie mogą się nigdzie bezpośrednio stykać, także z sąsiednimi elementami. Szczelina zapobiega tarciu i nieprawidłowemu osadzeniu.'])+
    '<h3>Uwaga</h3>'+ul('warn',[
    'Wszystkie ramiona leżą na tej samej wysokości (w bibliotece 7,0–10,5 mm nad platformą MU), więc ustawiasz je obok siebie, bez nakładania.',
    'Kąty na schemacie są poglądowe.']),
   dur:8000, tl:[[150,1],[2400,2],[4100,3]], arms:true},
 
- {chip:'Skan z Central X',title:'Krok 2: skan z Central X',lead:'Drugi skan obejmuje tylko końcówki Central X zebrane w środku łuku. Prowadzisz go jednym przejściem po okręgu przez końcówki ramion.',
+ {chip:'Skan z Central X',title:'Krok 2: skan z Central X',lead:'Drugi skan zaczynasz na tkankach miękkich, przechodzisz jednym ciągłym przejściem przez końcówki wszystkich ramion Central X i kończysz na tkankach miękkich po drugiej stronie łuku.',
   body:'<h3>Co robisz</h3>'+ul('do',[
-   'Skanuj tylko końcówki Central X, jednym przejściem po okręgu przez końcówki wszystkich ramion, dokładnie łapiąc geometrię końca: ścięcie, czoło i krawędzie.',
+   'Zacznij na tkankach miękkich w odcinku dystalnym, za ostatnim implantem: to referencja do pierwszego skanu dziąsła (skanu bez Central X).',
+   'Potem jednym ciągłym przejściem przez końcówki wszystkich ramion, dokładnie łapiąc geometrię końca: ścięcie, czoło i krawędzie.',
+   'Zakończ na tkankach miękkich w odcinku dystalnym po drugiej stronie łuku.',
+   'Wspólny fragment tkanek miękkich pozwala na best fit obu skanów, który ustawia tkanki i pozycje implantów.',
    'To ten sam odcinek ramienia (12,5–18 mm od osi), który biblioteka DAS CX dopasowuje w best fit jako marker CX_proto.',
    'Ramiona dodają punkty referencyjne i skracają odległości między nimi, co ogranicza utratę referencji podczas skanowania.'])+
    '<h3>Uwaga</h3>'+ul('warn',[
@@ -560,7 +572,7 @@ var STEPS = [
    'Poluzuj, nie wykręcając.',
    'Dopasuj do łuku (obrót ramienia).',
    'Załóż CAPS w otwór ramienia (katalog: pozycja 1 albo 2).',
-   'Dokręć ponownie, zgodnie z katalogiem producenta.',
+   'Dokręć ponownie śrubę Central X (5 N·cm).',
    'Skanuj.'])+
    '<h3>Uwaga</h3>'+ul('warn',[
    'CAPS wkręca się w górną część i daje informację o wymiarze pionowym.',
@@ -569,11 +581,13 @@ var STEPS = [
    'Wysokości 3,8 / 6 / 8 mm, wersje Regular i Wide (w sklepie DAS: S i W): dobór według katalogu.']),
   dur:11000, tl:[[300,1],[1900,2],[3500,3],[5100,4],[6500,5],[8400,6]]},
 
- {chip:'Best fit w Exocad',title:'Krok 3: best fit w Exocad',lead:'W laboratorium instalujesz biblioteki DAS CX w Exocad, wybierasz bibliotekę dla platformy i dopasowujesz marker Central X do skanu.',
+ {chip:'Best fit w Exocad',title:'Krok 3: best fit w Exocad',lead:'W laboratorium najpierw dopasowujesz skan z Central X do skanu dziąsła po wspólnym fragmencie tkanek miękkich, potem bibliotekę DAS CX do końcówek ramion.',
   body:'<h3>Instalacja'+'</h3>'+ul('do',[
    'Biblioteki komponentów (DAS_0025_CX_PREMIUM, DAS_MU_CX_PREMIUM) skopiuj do <b>DentalCADApp\\library\\implant</b>.',
    'Biblioteki analogów (nazwy kończące się na _ANALOG: DAS_I_0025_ANALOG, DAS_MU_ANALOG) skopiuj do <b>DentalCADApp\\library\\modelcreator\\implants</b>.'])+
    '<h3>Wybór i dopasowanie</h3>'+ul('do',[
+   'Najpierw best fit między skanem dziąsła (z multi-unitami) a skanem z Central X po wspólnym fragmencie tkanek miękkich: to ustawia tkanki i pozycje implantów.',
+   'Potem dopasowanie biblioteki CX (marker CX_proto) do końcówek ramion.',
    'DAS_0025_CX_PREMIUM: kod kompatybilności 0025 (w LIBRARY_CODES m.in. uniwersalne multi-unit wielu systemów). DAS_MU_CX_PREMIUM: DAS Multi-Unit.',
    'Marker, który Exocad dopasowuje do skanu, to CX_proto: końcowy odcinek ramienia Central X (12,5–18 mm od osi, 5,0 × 3,5 mm).',
    'PREMIUM: opcje na Tibase i opcje bezpośrednie (DIRECT) z rzeczywistym połączeniem, do frezowania bezpośredniego. W bibliotekach CX: TI-BASE R, 3Tibase (CH=5 / 7 / 9), DIRECT R, DIRECT R PROVISIONAL, z zakresami kąta kanału do 45°.',
@@ -595,12 +609,13 @@ var STEPS = [
    'Więcej CAPS niż potrzeba (zwykle 1–2 na stronę).',
    'CAPS z innym scanbody niż Scanbody Reference.',
    'Brak ponownego dokręcenia po ustawieniu ramienia i założeniu CAPS.',
-   'Moment inny niż w nazwie produktu (5 N·cm dla Central X i Scanbody Reference).',
+   'Scanbody Reference dokręcony momentem równym lub niższym niż śruba Central X (wymagane: Reference 10 N·cm, Central X 5 N·cm).',
+   'Kontakt Scanbody Reference z Central X albo stykające się końcówki ramion (brak szczeliny).',
    'Zły śrubokręt: Central X Hex 1,20, Scanbody Reference według wersji.',
    'Biblioteka z innym kodem niż platforma multi-unit.'])+
    '<h3>Według wsparcia DAS w KTI'+'</h3>'+ul('warn',[
    'Końcówki ramion nie skierowane do środka albo daleko od siebie.',
-   'Skan z Central X prowadzony wzdłuż całego łuku zamiast jednego przejścia po okręgu przez końcówki.',
+   'Brak referencji tkanek miękkich na początku i na końcu skanu z Central X.',
    'Zbędny osobny skan samych Scanbody Reference.',
    'CAPS założone, choć zwarcie nie jest rejestrowane.']),
   dur:8000, tl:[[150,1]]},
@@ -644,11 +659,13 @@ function zigzagPath(){
   for(var i=0;i<=N;i++){var f=i/N,ang=215-250*f,tri=Math.asin(0.94*Math.sin(2*Math.PI*f*per))/Math.asin(0.94);pts.push(polar(ang,RR+A*tri));} /* zaokrąglone zawroty */
   return ptsSampler(pts);
 }
-/* skan z Central X: jedno przejście po okręgu przez końcówki ramion */
+/* skan z Central X wg rysunku DAS: start na dziąśle dystalnie z lewej, jedno ciągłe przejście przez końcówki ramion, koniec na dziąśle dystalnie z prawej */
 function tipsPath(){
   var pts=[],N=700;
-  /* jeden pełny okrąg (r = 67 j., środek odcinka 12,5–18 mm) przez końcówki wszystkich ramion, start w otwarciu łuku */
-  for(var i=0;i<=N;i++){var t=i/N,ang=270-t*360;pts.push(polar(ang,67));}
+  function ez(t){return 0.5-0.5*Math.cos(Math.PI*t);}
+  for(var i=0;i<=60;i++){var t=i/60;pts.push(polar(212-10*t,160-98*ez(t)));}
+  for(var j=1;j<=N;j++){var u=j/N;pts.push(polar(202-224*u,62));}
+  for(var k=1;k<=60;k++){var w=k/60;pts.push(polar(-22-10*w,62+98*ez(w)));}
   return ptsSampler(pts);
 }
 var PATHS={c:cl,z:zigzagPath(),t:tipsPath()};
@@ -742,6 +759,8 @@ function archSVG(k, opts){
       for(var s=78;s<=110;s+=5){add(s,-15.25,2.1);add(s,15.25,2.1);}
       for(var q=0;q<10;q++)add(78+R()*30,(R()-.5)*26,1.8);
     });
+    /* punkty dziąsła na początku i na końcu skanu (referencja do skanu dziąsła) */
+    var RG=rnd(5);[[212,1],[-32,-1]].forEach(function(e){for(var q=0;q<26;q++){var p=polar(e[0]+e[1]*(RG()*14-4),160+(RG()-.5)*64);dots.push({x:p[0],y:p[1],c:'#8A8A8A',r:1.8});}});
     h+='<g class="cloud">'+dots.map(function(d){return '<circle class="dot" data-kt="'+PATHS.t.nearest(d.x,d.y).toFixed(4)+'" cx="'+f1(d.x)+'" cy="'+f1(d.y)+'" r="'+d.r+'" fill="'+d.c+'"/>';}).join('')+'</g>';
     h+='<path class="trail" d="'+P0.d+'" fill="none" stroke="url(#'+g+')" stroke-width="2" stroke-opacity=".7" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/>';
   }
@@ -752,10 +771,10 @@ function archSVG(k, opts){
   if(k===4){
     var m=[(IMPL[2].x+IMPL[3].x)/2,(IMPL[2].y+IMPL[3].y)/2];
     h+='<text class="lab" x="'+f1(m[0])+'" y="'+f1(m[1]-24)+'" text-anchor="middle">scanbody: duży odstęp</text>';
-    h+='<text class="lab" x="300" y="420" text-anchor="middle">wszystkie końcówki do środka,</text><text class="lab" x="300" y="440" text-anchor="middle">jak najbliżej siebie</text>';
+    h+='<text class="lab" x="300" y="420" text-anchor="middle">wszystkie końcówki do środka,</text><text class="lab" x="300" y="440" text-anchor="middle">blisko, ale bez kontaktu</text>';
   }
   if(k===5){
-    h+='<text class="lab z" x="300" y="420" text-anchor="middle">jeden okrąg</text><text class="lab z" x="300" y="440" text-anchor="middle">przez końcówki ramion</text>';
+    h+='<text class="lab z" x="300" y="420" text-anchor="middle">start i koniec na dziąśle,</text><text class="lab z" x="300" y="440" text-anchor="middle">jednym ciągłym przejściem przez końcówki ramion</text>';
   }
   return h+'</svg>';
 }
@@ -782,7 +801,7 @@ function sideSVG(k){
      '<path d="M172 151H262V218H172Q162 218 162 208V161Q162 151 172 151Z" fill="#363844"/><line x1="168" y1="158" x2="168" y2="210" stroke="#fff" stroke-opacity=".18" stroke-width="2"/><rect x="189" y="146" width="22" height="6" rx="2" fill="#7A7A7A"/><rect x="196" y="146" width="8" height="3" fill="#252525"/></g>'+
    '<g class="p-caps"><rect x="359" y="122" width="28" height="40" fill="url(#'+g+')"/>'+cth+'<rect x="341" y="101" width="64" height="21" rx="5" fill="url(#'+g+')"/><g clip-path="url(#kc'+k+')"><g class="knurl">'+knurl+'</g></g></g>'+
    '<g class="p-360"><ellipse cx="200" cy="190" rx="82" ry="18" fill="none" stroke="url(#'+g+')" stroke-width="2.2" stroke-dasharray="7 5"/><text x="70" y="150" class="t-m">360°</text></g>'+
-   '<g class="p-tq"><rect x="250" y="196" width="96" height="30" rx="15" fill="#060509"/><text x="298" y="216" text-anchor="middle" fill="#FFFEFE" style="font-size:15px">5 N·cm</text><text x="250" y="246" class="t-x">wg nazwy produktu</text></g>'+
+   '<g class="p-tq"><rect x="250" y="196" width="96" height="30" rx="15" fill="#060509"/><text x="298" y="216" text-anchor="middle" fill="#FFFEFE" style="font-size:15px">10 N·cm</text><text x="250" y="246" class="t-x">Scanbody Reference, przed Central X</text></g>'+
    '<g class="p-drv"><rect x="185" y="-1" width="30" height="48" rx="5" fill="#6F6F6F"/><rect x="196.5" y="47" width="7" height="100" fill="#B9B9B9" stroke="#7A7A7A" stroke-width=".8"/>'+
      '<path class="arc arc-cw" d="M179 124A21 7 0 1 0 221 124" fill="none" stroke="#363844" stroke-width="1.6" marker-end="url(#ar'+k+')"/>'+
      '<path class="arc arc-ccw" transform="translate(400 0) scale(-1 1)" d="M179 124A21 7 0 1 0 221 124" fill="none" stroke="#363844" stroke-width="1.6" marker-end="url(#ar'+k+')"/></g>'+
@@ -790,7 +809,7 @@ function sideSVG(k){
    '<g class="lbls">'+
      '<g><path class="ln" pathLength="1" d="M200 34H488M200 28V40M488 28V40"/><text x="488" y="24" text-anchor="end" class="t-x">18 mm od osi (L18)</text></g>'+
      '<g><path class="ln" pathLength="1" d="M330 124V138"/><text x="250" y="156" class="t-m">DAS Central X</text><text x="384" y="156" class="t-x">Hex 1,20 · 5 N·cm</text></g>'+
-     '<g><path class="ln" pathLength="1" d="M240 222H246"/><text x="252" y="222" class="t-m">DAS Scanbody Reference</text><text x="252" y="243" class="t-x">H7 · dobór wg platformy multi-unit</text></g>'+
+     '<g><path class="ln" pathLength="1" d="M240 222H246"/><text x="252" y="222" class="t-m">DAS Scanbody Reference</text><text x="252" y="243" class="t-x">H7 · 10 N·cm · dobór wg platformy MU</text></g>'+
      '<g><path class="ln" pathLength="1" d="M236 330H246"/><text x="252" y="328" class="t-m">Multi-unit</text><text x="252" y="345" class="t-x">DAS MU albo kompatybilny MU</text></g>'+
      '<g><path class="ln" pathLength="1" d="M232 420H246"/><text x="252" y="424" class="t-m">Implant</text><text x="252" y="445" class="t-x">system klienta</text></g>'+
    '</g></svg>';
