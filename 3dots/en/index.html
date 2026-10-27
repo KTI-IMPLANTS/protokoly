@@ -295,7 +295,7 @@ footer .legal{grid-column:1/-1;border-top:1px solid var(--g1);padding-top:16px;c
               </g>
               <g class="a2">
                 <path class="ln" pathLength="1" d="M900 260L960 190H1230"/><circle class="dt" cx="900" cy="262" r="9" fill="#0085C1"/>
-                <text x="1250" y="185">PEEK marker</text><text x="1250" y="225" class="sm">coded faces, measured</text><text x="1250" y="260" class="sm">by 3Dots</text>
+                <text x="1250" y="185">Ergal marker</text><text x="1250" y="225" class="sm">coded faces, measured</text><text x="1250" y="260" class="sm">by 3Dots</text>
                 <path class="ln" pathLength="1" d="M430 200V120H1230V110"/><circle class="dt" cx="430" cy="204" r="9" fill="#009F97"/>
                 <text x="1250" y="80">Titanium base</text><text x="1250" y="118" class="sm">on the MUA</text>              </g>
             </svg>
@@ -322,7 +322,7 @@ footer .legal{grid-column:1/-1;border-top:1px solid var(--g1);padding-top:16px;c
           </div>
 
           <!-- 4 markers -->
-          <div class="scene s3 s3d" data-i="4"><span class="cap">3D render · PEEK markers in diamond orientation</span>
+          <div class="scene s3 s3d" data-i="4"><span class="cap">3D render · coded markers in diamond orientation</span>
             <div class="inset"><img src="../img/klin-markery.jpg" alt="3Dots scan bodies screwed onto MUAs, clinical photo"><small>3Dots markers · Dr G. Dallari</small></div>
             <div class="fallback">The 3D visualisation requires a browser with WebGL support.</div>
           </div>
@@ -361,7 +361,7 @@ footer .legal{grid-column:1/-1;border-top:1px solid var(--g1);padding-top:16px;c
           <div class="scene s9 xf" data-i="9"><span class="cap">3Dots kit</span>
             <img class="i1" src="../img/skanbody-3dots-zestaw.jpg" alt="3Dots scan bodies, screws and drivers, product photo">
             <img class="i2" src="../img/walizka-3dots.jpg" alt="3Dots in its transport case, product photo">
-            <span class="badge b1">Titanium: any sterilisation · PEEK: gently</span>
+            <span class="badge b1">Titanium: any sterilisation · ergal: wrapped in gauze</span>
             <span class="badge b2">The device goes back into its case</span>
           </div>
 
@@ -371,7 +371,7 @@ footer .legal{grid-column:1/-1;border-top:1px solid var(--g1);padding-top:16px;c
               <div class="err" style="--i:0"><em>01</em><b>No calibration</b><span>before every clinical day</span></div>
               <div class="err" style="--i:1"><em>02</em><b>IOS scan without bases</b><span>nothing to match the positions to</span></div>
               <div class="err" style="--i:2"><em>03</em><b>Scan body does not match the MUA</b><span>MUA profiles differ</span></div>
-              <div class="err" style="--i:3"><em>04</em><b>PEEK autoclaved without gauze</b><span>wrap every part</span></div>
+              <div class="err" style="--i:3"><em>04</em><b>Marker autoclaved without gauze</b><span>wrap every part</span></div>
               <div class="err" style="--i:4"><em>05</em><b>Wrong distance or motion</b><span>approx. 35 cm, arc approx. ±15°</span></div>
               <div class="err" style="--i:5"><em>06</em><b>Close implants forced</b><span>additional capture + Align</span></div>
             </div>
@@ -431,7 +431,7 @@ footer .legal{grid-column:1/-1;border-top:1px solid var(--g1);padding-top:16px;c
 
 <footer>
   <div class="wrap">
-    <p class="legal">Information based on materials from the manufacturer Open Tech 3D (Rezzato, Italy) and on Mangano FG et al., J Dent 2026;165:106269 (in vitro study). Read the manufacturer’s instructions before use. For dental professionals (clinicians and dental technicians); this material is not a treatment recommendation. 3Dots and Optor L Ultra are products of Open Tech 3D. exocad is a trademark of its respective owner. Product photos and recordings: Open Tech 3D, published with permission; clinical photos: Dr Giacomo Dallari, Dr Luca Lavorgna; chairside recording: Dr Luca Ortensi, DT Marco Ortensi. 3D visualisations: real IOS scan and library geometry, scan body proportions approximate. Version 1.2 (EN), October 2026.</p>
+    <p class="legal">Information based on materials from the manufacturer Open Tech 3D (Rezzato, Italy) and on Mangano FG et al., J Dent 2026;165:106269 (in vitro study). Read the manufacturer’s instructions before use. For dental professionals (clinicians and dental technicians); this material is not a treatment recommendation. 3Dots and Optor L Ultra are products of Open Tech 3D. exocad is a trademark of its respective owner. Product photos and recordings: Open Tech 3D, published with permission; clinical photos: Dr Giacomo Dallari, Dr Luca Lavorgna; chairside recording: Dr Luca Ortensi, DT Marco Ortensi. 3D visualisations: real IOS scan and library geometry, scan body proportions approximate. Version 1.3 (EN), October 2026.</p>
   </div>
 </footer>
 
@@ -448,8 +448,8 @@ var TBC=' <span class="tbc">to be confirmed</span>';
 
 /* ---------- checklist ---------- */
 var CHECK=[
- ['Before',['3Dots calibrated on this clinical day: 3 stands × 3 plate captures','Implant system and MUA type confirmed','3Dots scan bodies matched to the MUA: titanium bases and PEEK markers (numbers 0–5), clean and ready','Hex 1.25 driver for the scan bodies (max. 10 N·cm)']],
- ['Chairside',['Titanium bases screwed onto the MUAs','IOS scan of the arch with the titanium bases saved (STL or OBJ)','PEEK markers screwed on in diamond orientation (cameras see 2 faces), stable, nothing in the way','Photo of the dots on the top faces (press the button twice), then acquisition: approx. 35 cm, arc approx. ±15°, approx. 15 s; scan bodies found = number of MUAs','Implants too close: additional capture, combined with Align','Sent to the laboratory: IOS scan and 3Dots acquisition']],
+ ['Before',['3Dots calibrated on this clinical day: 3 stands × 3 plate captures, X, Y, Z results green','Implant system and MUA type confirmed','3Dots scan bodies matched to the MUA: titanium bases and ergal markers (numbers 0–5), clean and ready','Hex 1.5 mm driver for the scan bodies (max. 10 N·cm)']],
+ ['Chairside',['Titanium bases screwed onto the MUAs','IOS scan of the arch with the titanium bases saved (STL or OBJ)','Markers screwed on in diamond orientation (cameras see 2 faces), stable, nothing in the way','Photo of the dots on the top faces (press the button twice), then acquisition: approx. 35 cm, arc approx. ±15°, approx. 15 s','Scan finished when all markers are green and the scan body count matches the declared number','Implants too close: additional capture, combined with Align','Sent to the laboratory: IOS scan and 3Dots acquisition']],
  ['Laboratory and after',['Positions decoded in Optor L Ultra, CAD library selected manually','Matching to the bases in the IOS scan checked, STL exported','Scan bodies removed, cleaned, disinfected or sterilised according to the material','Technical questions passed on to technical support']]
 ];
 var CK_TOTAL=CHECK.reduce(function(a,g){return a+g[1].length;},0);
@@ -474,12 +474,12 @@ var STEPS=[
    '<h3>Note</h3>'+ul('warn',['The accuracy figures are the manufacturer’s data and the result of an in vitro study (Mangano et al., J Dent 2026).']),
   dur:10500, tl:[[100,1],[900,2],[5200,3],[7400,4]]},
 
- {chip:'Preparation',title:'Preparation and scan body selection',lead:'A 3Dots scan body has two parts: a titanium base on the MUA and a coded PEEK marker. You select them for the MUA connection, not for the implant itself.',
+ {chip:'Preparation',title:'Preparation and scan body selection',lead:'A 3Dots scan body has two parts: a titanium base on the MUA and a coded marker made of anodised ergal (an aluminium alloy). You select them for the MUA connection, not for the implant itself.',
   body:'<h3>What to do</h3>'+ul('do',[
    'Confirm the implant system and the MUA type (e.g. DAS Multi-Unit or another system’s MUA).',
    'Select 3Dots scan bodies for this MUA, one per abutment. MUA profiles differ between manufacturers (e.g. JD and Nobel by 0.087 mm in the conical section), so the scan bodies are not “universal”.',
    'The kit contains 6 markers, numbered by dots on the top face: from 0 to 5 dots.',
-   'Have the dedicated hex 1.25 driver ready. Tightening torque: max. 10 N·cm.'])+
+   'Have the dedicated hex 1.5 mm driver ready. Tightening torque: max. 10 N·cm.'])+
    '<h3>Note</h3>'+ul('warn',[
    'Calibrate 3Dots before the first patient of the day (next step).']),
   dur:9500, k:'czesci', tl:[]},
@@ -489,14 +489,14 @@ var STEPS=[
    'Mount 3Dots and the calibration plate on the rail from the kit.',
    'Place the plate on the first stand and take 3 captures: in the centre position, after turning the plate slightly to the right and after turning it slightly to the left.',
    'Change to the second stand (different angle) and repeat the 3 captures: centre, right, left.',
-   'Change to the third stand (opposite angle) and repeat the 3 captures. 9 captures in total.'])+
+   'Change to the third stand (opposite angle) and repeat the 3 captures. 9 captures in total.','Click Calibrate. The software shows the calibration results for the X, Y and Z axes (Calibration X / Y / Z STD Result). All of them must be green.'])+'<h3>If a result is red</h3>'+ul('do',['If any result is shown in red (usually the Z axis), repeat the calibration.'])+
    '<h3>Note</h3>'+ul('warn',[
    'Manufacturer’s recommendation: calibrate before every clinical day. Moving and switching off 3Dots during the day does not require recalibration; the next day you calibrate again.']),
   dur:15000, k:'kalib', tl:[[400,2]]},
 
  {chip:'IOS scan',title:'Step 1: titanium bases and IOS scan',lead:'Screw the 3Dots titanium bases onto the MUAs and scan the arch with them in place. The laboratory will later match the photogrammetry positions to these bases.',
   body:'<h3>What to do</h3>'+ul('do',[
-   'Screw the titanium bases onto all MUAs: hex 1.25 driver, max. 10 N·cm.',
+   'Screw the titanium bases onto all MUAs: hex 1.5 mm driver, max. 10 N·cm.',
    'Scan the arch with any intraoral scanner, with the titanium bases (cylindrical scan bodies) in place. This scan provides the anatomy.',
    'Record the opposing arch and the bite as the case requires, as in a standard IOS workflow.',
    'Save the scan as STL or OBJ.'])+
@@ -504,9 +504,9 @@ var STEPS=[
    'Without the bases in the IOS scan, the laboratory has nothing to match the 3Dots positions to.']),
   dur:9500, k:'ios', tl:[[5200,2]]},
 
- {chip:'PEEK markers',title:'Step 2: 3Dots markers in diamond orientation',lead:'Screw the coded PEEK markers onto the titanium bases “in diamond orientation”: an edge facing 3Dots, so that the cameras see two faces of each marker.',
+ {chip:'Markers',title:'Step 2: 3Dots markers in diamond orientation',lead:'Screw the coded markers onto the titanium bases “in diamond orientation”: an edge facing 3Dots, so that the cameras see two faces of each marker.',
   body:'<h3>What to do</h3>'+ul('do',[
-   'Screw a marker onto each base (hex 1.25 driver, max. 10 N·cm) and check that it is stable.',
+   'Screw a marker onto each base (hex 1.5 mm driver, max. 10 N·cm) and check that it is stable.',
    'Set each marker in diamond orientation: a vertical edge facing 3Dots, two coded faces visible.',
    'The marker number is the number of dots on its top face (0–5). In the render: markers 0, 1, 2, 3 and 4.',
    'The markers must be visible from the camera side: nothing covers them (lip, saliva ejector, retractor).'])+
@@ -519,7 +519,7 @@ var STEPS=[
    'Take the photo: press the button twice. The photo records the dots on the top faces of the markers, i.e. their numbers.',
    'Start the acquisition with the start/stop button.',
    'Keep a constant distance of approx. 35 cm, the arch in the centre of the motion, a swing of approx. ±15°. No contact with the patient, no reference frame to define.',
-   'Watch the screen: the distance message (e.g. “Scanning Distance: OPTIMAL”) and the number of scan bodies found (“Scan Abutments Found”). The number must match the number of MUAs.',
+   'Watch the screen: the distance message (e.g. “Scanning Distance: OPTIMAL”) and the number of scan bodies found (“Scan Abutments Found”).','Finish the scan when all markers are green and the number of scan bodies found matches the number of scan bodies declared earlier.',
    'Send the IOS scan and the 3Dots acquisition (green points) to the laboratory. The laboratory decodes the implant positions.'])+
    '<h3>Why the photo of the dots</h3>'+ul('do',[
    'Markers are screwed on in order, but sometimes they end up in a different order. Thanks to the photo, the software knows which marker sits in which position.',
@@ -549,23 +549,23 @@ var STEPS=[
    'Design in CAD (e.g. exocad) without compensating for scan inaccuracy.']),
   dur:13000, k:'cad', tl:[], video:true},
 
- {chip:'Removal',title:'Removal and scan body reprocessing',lead:'After the acquisition, unscrew the markers and the bases. The titanium part and the PEEK part are reprocessed differently.',
+ {chip:'Removal',title:'Removal and scan body reprocessing',lead:'After the acquisition, unscrew the markers and the bases. The titanium base and the ergal marker are reprocessed differently.',
   body:'<h3>What to do</h3>'+ul('do',[
    'Unscrew the markers and the titanium bases. Further handling of the MUAs follows the clinician’s plan and is not covered by this protocol.',
    'The titanium part can be sterilised by any method.',
-   'The coded PEEK part: soak gently in dedicated solutions. It can go into the autoclave, but every part must be wrapped in gauze.',
+   'The coded marker (ergal): soak gently in dedicated solutions. It can be autoclaved once protected: every part wrapped in gauze.',
    'Keep the device, the plate and the calibration stands in the case.'])+
    '<h3>Note</h3>'+ul('warn',['Damaged marker (scratches, missing code dots) or play on the MUA: do not use; note the catalogue no., LOT, description and photos and report it to the person responsible for complaints.']),
   dur:8000, tl:[[3600,2]]},
 
  {chip:'Common errors',title:'Common errors',lead:'From the manufacturer’s materials, field experience, the Mangano study and the Optor L Ultra recording.',
   body:ul('do',[
-   'No calibration on the clinical day.',
+   'No calibration on the clinical day, or a calibration with a red result (usually the Z axis) that was not repeated.',
    'IOS scan without the titanium bases: the laboratory has nothing to match the positions to.',
    'Scan body does not match the MUA.',
-   'Distance and motion other than approx. 35 cm and approx. ±15°; not all scan bodies found and the acquisition not repeated.',
+   'Distance and motion other than approx. 35 cm and approx. ±15°.','Scan finished before all markers were green, or the scan body count does not match the declared number.',
    'Two close implants measured in one capture although the markers do not fit.',
-   'PEEK part autoclaved without being wrapped in gauze.']),
+   'Marker autoclaved without first being wrapped in gauze.']),
   dur:8000, tl:[[150,1]]},
 
  {chip:'Checklist',title:'Checklist',lead:'Tick the completed items. The state is saved in this browser only.',
@@ -986,7 +986,7 @@ function placeMarkers(){markers.forEach((m,k)=>{m.position.copy(RAW_MUA[k].t);m.
 const SC={
  czesci:{dur:9,target:[0,2,0],
   enter(){parts.visible=true;camera.fov=30;camera.updateProjectionMatrix();
-   setLabels([{t:'Coded PEEK marker',p:wp(pMk.userData.pr,V(PW/2,1,0)),show:t=>t>3.6},
+   setLabels([{t:'Coded ergal marker',p:wp(pMk.userData.pr,V(PW/2,1,0)),show:t=>t>3.6},
      {t:'Titanium base on the MUA',p:wp(pMk,V(-3,2.4,0)),show:t=>t>3.9,left:true},
      {t:'MUA',p:wp(pMua,V(2,-1.4,0)),show:t=>t>4.2},
      {t:'Implant (customer’s system)',p:wp(pImpl,V(-2.4,-6,0)),show:t=>t>4.5,left:true}]);},
@@ -1006,10 +1006,10 @@ const SC={
    cam([[0,[-42,78,92],[0,-3,0]],[4.5,[0,84,96],[0,-3,0]],[9,[38,74,90],[0,-3,0]]],t);}},
  montaz:{dur:10,target:[0,4,0],
   enter(){jaw.visible=true;shadow.visible=true;placeMarkers();markers.forEach(m=>m.visible=true);gumVis(true);camera.fov=30;camera.updateProjectionMatrix();
-   setLabels([{t:'Diamond: 2 faces toward 3Dots',p:mkTop(4),show:t=>t>6.6},{t:'Hex 1.25 · max. 10 N·cm',p:mkTop(1),show:t=>t>7.1,left:true},{t:'Number = dots on top (0–4)',p:mkTop(2),show:t=>t>7.6}]);},
+   setLabels([{t:'Diamond: 2 faces toward 3Dots',p:mkTop(4),show:t=>t>6.6},{t:'Hex 1.5 mm · max. 10 N·cm',p:mkTop(1),show:t=>t>7.1,left:true},{t:'Number = dots on top (0–4)',p:mkTop(2),show:t=>t>7.6}]);},
   update(t){markers.forEach((g,k)=>{const t0=.5+k*1.05,e=ss(t0,t0+1.5,t),pr=g.userData.pr;pr.position.y=PB+PH/2+(1-e)*24;pr.rotation.y=(1-e)*Math.PI*3;pr.visible=t>t0-.05;});
    cam([[0,[0,70,104],[6,4,0]],[6.4,[10,96,86],[2,4,0]],[10,[0,104,80],[0,4,0]]],t);}},
- kalib:{dur:15,target:[0,90,0],
+ kalib:{dur:17,target:[0,90,0],
   enter(){kal.visible=true;dev.visible=true;rays.visible=true;camera.fov=30;camera.updateProjectionMatrix();
    dev.position.set(-175,144,0);dev.lookAt(KPX,100,0);dev.updateMatrixWorld(true);
    setLabels([{t:'3Dots',p:wp(dev,V(0,82,0)),show:t=>t>.5},{t:'Calibration plate',p:wp(kFace,V(0,48,0)),show:t=>t>.9},{t:'Stand (3 angles)',p:o=>o.set(KPX+22,30,0),show:t=>t>1.3}]);
@@ -1031,7 +1031,8 @@ const SC={
    [[-74,-44],[74,-44],[74,44],[-74,44]].forEach(c=>{cp.set(c[0],c[1],0.1);kFace.localToWorld(cp);lensObjs.forEach(o=>{lp.setFromMatrixPosition(o.matrixWorld);a.set([lp.x,lp.y,lp.z,cp.x,cp.y,cp.z],i*6);i++;});});
    rayGeo.attributes.position.needsUpdate=true;rays.material.opacity=fl*.8;
    hudK.classList.toggle('on',t>.3);
-   if(n>=9){hKa.innerHTML='<span class="ok">Calibration complete</span> · 9 / 9';hKb.textContent='3 stands × 3 captures';}
+   if(t>=14.6){hKa.innerHTML='Calibration results: <span class="ok">X, Y, Z green</span>';hKb.innerHTML='<span class="ok">X STD 0.005016 · Y STD 0.005356 · Z STD 0.012810</span>';}
+   else if(n>=9){hKa.innerHTML='9 / 9 captures · <span class="ok">Calibrate</span>';hKb.textContent='calculating the X, Y, Z axis calibration';}
    else{const r=u<2.35?1:u<3.35?2:3;hKa.textContent='Stand '+(w+1)+' of 3 · capture '+r+' of 3';hKb.textContent='Plate: '+['centre','slightly right','slightly left'][r-1]+' · captures: '+n+' / 9';}
    hKc.style.width=(n/9*100)+'%';
    cam([[0,[-430,300,640],[40,75,0]],[15,[-280,280,720],[40,75,0]]],t);}},
@@ -1094,7 +1095,7 @@ function hud(t){hudA.classList.toggle('on',t>.3);
   else if(t<1.6){hA.textContent='Photo · press the button twice';hB.textContent='recording the dots on the top faces of the markers';hC.style.width='0';}
   else if(t<4.3){hA.innerHTML='<span class="ok">Photo saved</span> · marker numbers 0–4';hB.textContent='the software knows which marker sits in which position';hC.style.width='0';}
   else if(t<9.4){hA.innerHTML='Acquisition · distance: <span class="ok">OPTIMAL</span>';hB.textContent='arc motion approx. ±15° · approx. 35 cm';hC.style.width=(ss(4.4,9.4,t)*100)+'%';}
-  else{const n=Math.min(5,Math.max(0,Math.floor((t-10.4)/.55)+1));hA.innerHTML=(n>=5?'<span class="ok">Implant positions recorded</span>':'Identifying scan bodies')+' · found: '+n+' / 5';hB.textContent='Scan Abutments Found: '+n;hC.style.width='100%';}}
+  else{const n=Math.min(5,Math.max(0,Math.floor((t-10.4)/.55)+1));hA.innerHTML=(n>=5?'<span class="ok">All markers green · scan complete</span>':'Identifying scan bodies · found: '+n+' / 5');hB.innerHTML='Scan Abutments Found: '+n+' · declared: 5'+(n>=5?' <span class="ok">✓</span>':'');hC.style.width='100%';}}
 
 /* ---------- pętla ---------- */
 const controls=new OrbitControls(camera,canvas);controls.enabled=false;controls.enableDamping=true;controls.enablePan=false;controls.minDistance=25;controls.maxDistance=700;
