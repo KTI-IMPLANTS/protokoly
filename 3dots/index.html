@@ -219,6 +219,8 @@ footer .legal{grid-column:1/-1;border-top:1px solid var(--g1);padding-top:16px;c
 .skal .inset{width:24%}
 .chip.new{border-color:var(--teal);color:var(--teal)}
 .chip.new[aria-current="step"]{background:var(--teal);border-color:var(--teal);color:#FFFEFE}
+.chip.lab{border-style:dashed}
+.labtag{display:inline-block;margin-left:8px;font-size:11px;font-weight:400;text-transform:uppercase;letter-spacing:.06em;color:var(--ink);border:1px dashed var(--ink);border-radius:30px;padding:4px 10px;vertical-align:2px}
 
 /* s10 errors */
 .errs{position:absolute;inset:12% 3% 4%;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,1fr);gap:8px}
@@ -256,7 +258,7 @@ footer .legal{grid-column:1/-1;border-top:1px solid var(--g1);padding-top:16px;c
   <div class="wrap">
     <p class="eyebrow">Fotogrametria · prace pełnołukowe na MUA</p>
     <h1>3Dots krok po kroku</h1>
-    <p class="lead">Protokół postępowania z fotogrametrią 3Dots (Open Tech 3D): przygotowanie, skan IOS, skanbody 3Dots, akwizycja, Optor L Ultra i plik STL dla laboratorium. Dla lekarzy, techników i zespołu KTI.</p>
+    <p class="lead">Protokół postępowania z fotogrametrią 3Dots (Open Tech 3D) w gabinecie: przygotowanie, kalibracja, skan IOS, markery 3Dots i akwizycja. Na końcu część dla laboratorium: Optor L Ultra i plik STL. Dla lekarzy, zespołu gabinetu i techników.</p>
   </div>
 </section>
 
@@ -308,7 +310,8 @@ footer .legal{grid-column:1/-1;border-top:1px solid var(--g1);padding-top:16px;c
           </div>
 
           <!-- 2 kalibracja -->
-          <div class="scene skal s3d" data-i="2"><span class="cap">Render 3D · kalibracja</span>
+          <div class="scene skal s3d has-video" data-i="2"><span class="cap">Render 3D · kalibracja</span>
+            <div class="toggle" role="group" aria-label="Widok"><button type="button" data-v="" aria-pressed="true">Animacja 3D</button><button type="button" data-v="video/kalibracja-swiatlo.mp4" data-cap="Nagranie ekranu Optor L: ustawienie światła suwakiem Camera Gain (przyspieszone)" aria-pressed="false">Nagranie: ustawienie światła</button></div>
             <div class="hud" id="hudk"><b id="hudka">Kalibracja</b><small id="hudkb">&nbsp;</small><div class="bar"><span id="hudkc"></span></div></div>
             <div class="inset"><img src="img/plytka-kalibracyjna.jpg" alt="3Dots na listwie kalibracyjnej z płytką na podstawce, zdjęcie produktu"><small>Zestaw kalibracyjny · Open Tech 3D</small></div>
             <div class="fallback">Wizualizacja 3D wymaga przeglądarki z obsługą WebGL.</div>
@@ -333,15 +336,8 @@ footer .legal{grid-column:1/-1;border-top:1px solid var(--g1);padding-top:16px;c
             <div class="fallback">Wizualizacja 3D wymaga przeglądarki z obsługą WebGL.</div>
           </div>
 
-          <!-- 6 optor -->
-          <div class="scene s5 s3d has-video" data-i="6"><span class="cap">Render 3D · Optor L Ultra</span>
-            <ol class="subs" aria-hidden="true"><li><b>1</b><span>Punkty</span></li><li><b>2</b><span>Skanbody</span></li><li><b>3</b><span>Biblioteka</span></li></ol>
-            <div class="toggle" role="group" aria-label="Widok"><button type="button" data-v="" aria-pressed="true">Animacja 3D</button><button type="button" data-v="video/optor-identyfikacja.mp4" aria-pressed="false">Identyfikacja</button></div>
-            <div class="fallback">Wizualizacja 3D wymaga przeglądarki z obsługą WebGL.</div>
-          </div>
-
-          <!-- 7 bliskie implanty -->
-          <div class="scene s6 xf dark-bg" data-i="7"><span class="cap">Przypadek: szczęka, 6 implantów</span>
+          <!-- 6 bliskie implanty -->
+          <div class="scene s6 xf dark-bg" data-i="6"><span class="cap">Przypadek: szczęka, 6 implantów</span>
             <img class="i1" src="img/przyp2-mua.jpg" alt="Szczęka z sześcioma MUA, zaznaczone dwa implanty blisko siebie">
             <img class="i2" src="img/przyp2-switch.jpg" alt="Skanbody 3Dots przełożone na sąsiedni implant między dwiema akwizycjami">
             <span class="badge b1">Dwa implanty bardzo blisko siebie</span>
@@ -349,23 +345,16 @@ footer .legal{grid-column:1/-1;border-top:1px solid var(--g1);padding-top:16px;c
             <span class="credit">dr Luca Lavorgna</span>
           </div>
 
-          <!-- 8 cad -->
-          <div class="scene s7 s3d has-video" data-i="8"><span class="cap">Render 3D · dopasowanie do podstaw</span>
-            <ol class="subs" aria-hidden="true"><li><b>1</b><span>Pozycje 3Dots</span></li><li><b>2</b><span>Nałożenie na IOS</span></li><li><b>3</b><span>Biblioteka</span></li><li><b>4</b><span>Model STL</span></li></ol>
-            <div class="toggle" role="group" aria-label="Widok"><button type="button" data-v="" aria-pressed="true">Animacja 3D</button><button type="button" data-v="video/optor-dopasowanie.mp4" aria-pressed="false">Dopasowanie</button></div>
-            <div class="fallback">Wizualizacja 3D wymaga przeglądarki z obsługą WebGL.</div>
-          </div>
-
-          <!-- 9 demontaz -->
-          <div class="scene s9 xf" data-i="9"><span class="cap">Zestaw 3Dots</span>
+          <!-- 7 demontaz -->
+          <div class="scene s9 xf" data-i="7"><span class="cap">Zestaw 3Dots</span>
             <img class="i1" src="img/skanbody-3dots-zestaw.jpg" alt="Skanbody 3Dots, śruby i klucze, zdjęcie produktu">
             <img class="i2" src="img/walizka-3dots.jpg" alt="3Dots w walizce transportowej, zdjęcie produktu">
             <span class="badge b1">Tytan: dowolna sterylizacja · ergal: w gaziku</span>
             <span class="badge b2">Urządzenie wraca do walizki</span>
           </div>
 
-          <!-- 10 bledy -->
-          <div class="scene serr" data-i="10"><span class="cap">Najczęstsze błędy</span>
+          <!-- 8 bledy -->
+          <div class="scene serr" data-i="8"><span class="cap">Najczęstsze błędy</span>
             <div class="errs">
               <div class="err" style="--i:0"><em>01</em><b>Brak kalibracji</b><span>przed każdym dniem zabiegowym</span></div>
               <div class="err" style="--i:1"><em>02</em><b>Skan IOS bez podstaw</b><span>nie ma do czego dopasować pozycji</span></div>
@@ -376,8 +365,8 @@ footer .legal{grid-column:1/-1;border-top:1px solid var(--g1);padding-top:16px;c
             </div>
           </div>
 
-          <!-- 11 checklista -->
-          <div class="scene sck" data-i="11">
+          <!-- 9 checklista -->
+          <div class="scene sck" data-i="9">
             <img class="bg" src="img/klin-markery-zuchwa.jpg" alt="" aria-hidden="true">
             <div class="ring" aria-hidden="true">
               <svg viewBox="0 0 160 160">
@@ -390,18 +379,32 @@ footer .legal{grid-column:1/-1;border-top:1px solid var(--g1);padding-top:16px;c
             </div>
           </div>
 
-          <!-- 12 nowosc: reverse scanbody -->
-          <div class="scene snew dark-bg" data-i="12"><span class="cap">Nowość · Reverse Scanbody</span>
+          <!-- 10 nowosc: reverse scanbody -->
+          <div class="scene snew dark-bg" data-i="10"><span class="cap">Nowość · Reverse Scanbody</span>
             <img class="still" src="img/optor-struktura-markery.jpg" alt="Konstrukcja testowa i skanbody 3Dots, kadr z nagrania">
             <video muted playsinline loop preload="none" data-src="video/optor-porownanie.mp4"></video>
             <span class="newtag">Nowość 2026</span>
           </div>
 
-          <!-- 13 nowosc: jaw motion -->
-          <div class="scene snew dark-bg" data-i="13"><span class="cap">Nowość · Jaw Motion</span>
+          <!-- 11 nowosc: jaw motion -->
+          <div class="scene snew dark-bg" data-i="11"><span class="cap">Nowość · Jaw Motion</span>
             <img class="still" src="img/jaw-motion.jpg" alt="Modele szczęki i żuchwy z płaskimi markerami ruchu, kadr z nagrania">
             <video muted playsinline loop preload="none" data-src="video/jaw-motion.mp4"></video>
             <span class="newtag">Nowość 2026</span>
+          </div>
+
+          <!-- 12 laboratorium: optor -->
+          <div class="scene s5 s3d has-video" data-i="12"><span class="cap">Laboratorium · render 3D · Optor L Ultra</span>
+            <ol class="subs" aria-hidden="true"><li><b>1</b><span>Punkty</span></li><li><b>2</b><span>Skanbody</span></li><li><b>3</b><span>Biblioteka</span></li></ol>
+            <div class="toggle" role="group" aria-label="Widok"><button type="button" data-v="" aria-pressed="true">Animacja 3D</button><button type="button" data-v="video/optor-identyfikacja.mp4" aria-pressed="false">Identyfikacja</button></div>
+            <div class="fallback">Wizualizacja 3D wymaga przeglądarki z obsługą WebGL.</div>
+          </div>
+
+          <!-- 13 laboratorium: cad -->
+          <div class="scene s7 s3d has-video" data-i="13"><span class="cap">Laboratorium · render 3D · dopasowanie do podstaw</span>
+            <ol class="subs" aria-hidden="true"><li><b>1</b><span>Pozycje 3Dots</span></li><li><b>2</b><span>Nałożenie na IOS</span></li><li><b>3</b><span>Biblioteka</span></li><li><b>4</b><span>Model STL</span></li></ol>
+            <div class="toggle" role="group" aria-label="Widok"><button type="button" data-v="" aria-pressed="true">Animacja 3D</button><button type="button" data-v="video/optor-dopasowanie.mp4" aria-pressed="false">Dopasowanie</button></div>
+            <div class="fallback">Wizualizacja 3D wymaga przeglądarki z obsługą WebGL.</div>
           </div>
 
           <div class="vbox" id="vbox"><video id="vid" muted playsinline loop preload="none"></video><small id="vcap">Nagranie ekranu Optor L Ultra (przyspieszone)</small></div>
@@ -439,7 +442,7 @@ footer .legal{grid-column:1/-1;border-top:1px solid var(--g1);padding-top:16px;c
         <a href="https://www.kti-implants.pl">www.kti-implants.pl</a>
       </div>
     </div>
-    <p class="legal">Informacje według materiałów producenta Open Tech 3D (Rezzato, Włochy) i publikacji Mangano FG i wsp., J Dent 2026;165:106269 (badanie in vitro). Przed użyciem zapoznaj się z instrukcją producenta. Materiał dla profesjonalistów (lekarze, technicy dentystyczni), nie stanowi zaleceń leczenia. 3Dots i Optor L Ultra są produktami Open Tech 3D. Zdjęcia produktu i nagrania: Open Tech 3D, publikowane za zgodą; zdjęcia kliniczne: dr Giacomo Dallari, dr Luca Lavorgna; nagranie z gabinetu: dr Luca Ortensi, tech. dent. Marco Ortensi. Wizualizacje 3D: rzeczywisty skan IOS i geometria z bibliotek, proporcje skanbody orientacyjne. Wersja 1.3, 27.10.2026.</p>
+    <p class="legal">Informacje według materiałów producenta Open Tech 3D (Rezzato, Włochy) i publikacji Mangano FG i wsp., J Dent 2026;165:106269 (badanie in vitro). Przed użyciem zapoznaj się z instrukcją producenta. Materiał dla profesjonalistów (lekarze, technicy dentystyczni), nie stanowi zaleceń leczenia. 3Dots i Optor L Ultra są produktami Open Tech 3D. Zdjęcia produktu i nagrania: Open Tech 3D, publikowane za zgodą; zdjęcia kliniczne: dr Giacomo Dallari, dr Luca Lavorgna; nagranie z gabinetu: dr Luca Ortensi, tech. dent. Marco Ortensi. Wizualizacje 3D: rzeczywisty skan IOS i geometria z bibliotek, proporcje skanbody orientacyjne. Wersja 1.4, 02.11.2026.</p>
   </div>
 </footer>
 
@@ -456,12 +459,13 @@ var TBC=' <span class="tbc">do potwierdzenia</span>';
 
 /* ---------- checklista ---------- */
 var CHECK=[
- ['Przed',['3Dots skalibrowany w tym dniu zabiegowym: 3 podstawki × 3 rejestracje płytki, wyniki osi X, Y, Z na zielono','System implantu i typ łączników MUA ustalone','Skanbody 3Dots dobrane do MUA: podstawy tytanowe i markery z ergalu (numery 0–5), czyste i przygotowane','Klucz hex 1,5 mm do skanbody (maks. 10 N·cm)']],
- ['W gabinecie',['Podstawy tytanowe przykręcone na MUA','Skan IOS łuku razem z podstawami tytanowymi zapisany (STL lub OBJ)','Markery wkręcone w diament (kamery widzą 2 ściany), stabilne, niczym niezasłonięte','Zdjęcie kropek na górnych ścianach (przycisk 2 razy), potem akwizycja: ok. 35 cm, ruch po łuku ok. ±15°, ok. 15 s',"Skan zakończony, gdy wszystkie markery są zielone, a liczba skanbody zgadza się z zadeklarowaną",'Implanty zbyt blisko: dodatkowe zdjęcie, łączone opcją Align','Do laboratorium: skan IOS i akwizycja 3Dots']],
- ['W laboratorium i po',['Pozycje zdekodowane w Optor L Ultra, biblioteka CAD wybrana ręcznie','Dopasowanie do podstaw w skanie IOS sprawdzone, STL wyeksportowany','Skanbody odkręcone, umyte i zdezynfekowane albo wysterylizowane według materiału','Pytania techniczne przekazane do wsparcia KTI']]
+ ['Przed',['3Dots skalibrowany w tym dniu zabiegowym: światło ustawione raz (Camera Gain), 3 podstawki × 3 rejestracje płytki, wyniki osi X, Y, Z na zielono','System implantu i typ łączników MUA ustalone','Skanbody 3Dots dobrane do MUA: podstawy tytanowe i markery z ergalu (numery 0–5), czyste i przygotowane','Klucz hex 1,5 mm do skanbody (maks. 10 N·cm)']],
+ ['W gabinecie',['Podstawy tytanowe przykręcone na MUA','Skan IOS łuku razem z podstawami tytanowymi zapisany (STL lub OBJ)','Markery wkręcone w diament (kamery widzą 2 ściany), stabilne, niczym niezasłonięte','Zdjęcie kropek na górnych ścianach (przycisk 2 razy), potem akwizycja: ok. 35 cm, ruch po łuku ok. ±15°, ok. 15 s',"Skan zakończony jednym naciśnięciem przycisku, gdy wszystkie markery są zielone, a liczba skanbody zgadza się z zadeklarowaną",'Implanty zbyt blisko: dodatkowe zdjęcie, łączone opcją Align','Do laboratorium: skan IOS i akwizycja 3Dots']],
+ ['Po akwizycji',['Skanbody odkręcone, umyte i zdezynfekowane albo wysterylizowane według materiału','Pytania techniczne przekazane do wsparcia KTI']],
+ ['Laboratorium',['Pozycje zdekodowane w Optor L Ultra, biblioteka CAD wybrana ręcznie','Dopasowanie do podstaw w skanie IOS sprawdzone, STL wyeksportowany']]
 ];
 var CK_TOTAL=CHECK.reduce(function(a,g){return a+g[1].length;},0);
-var STORE='kti-3dots-checklista-v3';
+var STORE='kti-3dots-checklista-v4';
 function loadCk(){try{var v=JSON.parse(localStorage.getItem(STORE)||'[]');return Array.isArray(v)?v:[];}catch(e){return [];}}
 function saveCk(v){try{localStorage.setItem(STORE,JSON.stringify(v));}catch(e){}}
 function checklistHTML(){
@@ -492,15 +496,17 @@ var STEPS=[
    'Przed pierwszym pacjentem danego dnia skalibruj 3Dots (następny krok).']),
   dur:9500, k:'czesci', tl:[]},
 
- {chip:'Kalibracja',title:'Kalibracja 3Dots',lead:'Przed każdym dniem zabiegowym kalibrujesz 3Dots płytką kalibracyjną. Płytka stoi kolejno na 3 podstawkach o różnych kątach, a na każdej robisz 3 rejestracje.',
+ {chip:'Kalibracja',title:'Kalibracja 3Dots',lead:'Przed każdym dniem zabiegowym kalibrujesz 3Dots płytką kalibracyjną. Raz ustawiasz światło, potem płytka stoi kolejno na 3 podstawkach o różnych kątach, a na każdej robisz 3 rejestracje.',
   body:'<h3>Co robisz</h3>'+ol([
-   'Zamocuj 3Dots i płytkę kalibracyjną na listwie z zestawu.',
-   'Ustaw płytkę na pierwszej podstawce i wykonaj 3 rejestracje: w pozycji środkowej, po lekkim przekręceniu płytki w prawo i po lekkim przekręceniu w lewo.',
+   'Zamocuj 3Dots i płytkę kalibracyjną na listwie z zestawu. Płytka stoi na pierwszej podstawce, w pozycji środkowej.',
+   'Ustaw światło. W oknie Head Calibration podgląd kamery pokazuje prześwietlone miejsca płytki na pomarańczowo. Przesuń suwak Camera Gain w lewo, aż pomarańczowe pole zmniejszy się do niewielkiej plamy na środku płytki (nagranie: przycisk „Nagranie: ustawienie światła”).',
+   'Wykonaj 3 rejestracje przyciskiem Acquire Image: w pozycji środkowej, po lekkim przekręceniu płytki w prawo i po lekkim przekręceniu w lewo.',
    'Zmień podstawkę na drugą (inny kąt) i powtórz 3 rejestracje: środek, w prawo, w lewo.',
    'Zmień podstawkę na trzecią (kąt odwrotny) i powtórz 3 rejestracje. Razem 9 rejestracji.','Kliknij Calibrate. Program pokazuje wyniki kalibracji osi X, Y i Z (Calibration X / Y / Z STD Result). Wszystkie muszą być zielone.'])+'<h3>Gdy wynik jest czerwony</h3>'+ul('do',['Jeśli któryś wynik pojawi się na czerwono (zwykle oś Z), powtórz kalibrację.'])+
    '<h3>Uwaga</h3>'+ul('warn',[
+   'Światło ustawiasz tylko raz: na pierwszej podstawce, w pierwszej pozycji płytki. Przy kolejnych rejestracjach i podstawkach program dobiera je automatycznie.',
    'Zalecenie producenta: kalibracja przed każdym dniem zabiegowym. Przeniesienie i wyłączenie 3Dots w ciągu dnia nie wymaga ponownej kalibracji; następnego dnia kalibrujesz od nowa.']),
-  dur:17000, k:'kalib', tl:[[400,2]]},
+  dur:20000, k:'kalib', tl:[[400,2]], video:true},
 
  {chip:'Skan IOS',title:'Krok 1: podstawy tytanowe i skan IOS',lead:'Na MUA przykręcasz podstawy tytanowe skanbody 3Dots i skanujesz łuk razem z nimi. Do tych podstaw laboratorium dopasuje później pozycje z fotogrametrii.',
   body:'<h3>Co robisz</h3>'+ul('do',[
@@ -519,7 +525,7 @@ var STEPS=[
    'Numer markera to liczba kropek na górnej ścianie (0–5). Na renderze: markery 0, 1, 2, 3 i 4.',
    'Markery muszą być widoczne od strony kamer: nic ich nie zasłania (warga, ślinociąg, retraktor).'])+
    '<h3>Uwaga</h3>'+ul('warn',[
-   'Gdy dwa implanty są tak blisko, że markery się nie mieszczą, robisz dodatkowe zdjęcie (krok 07).']),
+   'Gdy dwa implanty są tak blisko, że markery się nie mieszczą, robisz dodatkowe zdjęcie (krok 06).']),
   dur:10500, k:'montaz', tl:[[6400,2]]},
 
  {chip:'Akwizycja',title:'Krok 3: zdjęcie i akwizycja 3Dots',lead:'Najpierw robisz zdjęcie, które rejestruje kropki na górnych ścianach markerów. Potem akwizycja: 3Dots ok. 35 cm od łuku, ruch po łuku o ok. 30° (ok. 15° w prawo i 15° w lewo od pozycji frontalnej), ok. 15 s.',
@@ -527,19 +533,12 @@ var STEPS=[
    'Zrób zdjęcie: naciśnij przycisk 2 razy. Zdjęcie rejestruje kropki na górnych ścianach markerów, czyli ich numery.',
    'Uruchom akwizycję przyciskiem start/stop.',
    'Trzymaj stałą odległość ok. 35 cm, łuk w środku okręgu ruchu, wychylenie ok. ±15°. Bez kontaktu z pacjentem, bez definiowania układu odniesienia.',
-   'Obserwuj ekran: komunikat odległości (np. „Scanning Distance: OPTIMAL”) i liczbę znalezionych skanbody („Scan Abutments Found”).','Skan kończysz, gdy wszystkie markery są zielone, a liczba znalezionych skanbody zgadza się z liczbą skanbody zadeklarowaną wcześniej.',
+   'Obserwuj ekran: komunikat odległości (np. „Scanning Distance: OPTIMAL”) i liczbę znalezionych skanbody („Scan Abutments Found”).','Skan kończysz jednym naciśnięciem przycisku, gdy wszystkie markery są zielone, a liczba znalezionych skanbody zgadza się z liczbą skanbody zadeklarowaną wcześniej.',
    'Do laboratorium wysyłasz skan IOS i akwizycję 3Dots (zielone punkty). Pozycje implantów dekoduje laboratorium.'])+
    '<h3>Po co zdjęcie kropek</h3>'+ul('do',[
    'Markery wkręcamy w kolejności, ale zdarza się wkręcić je w innej. Dzięki zdjęciu software wie, który marker stoi na której pozycji.',
-   'Przy wyborze biblioteki technik od razu widzi, czy musi zmienić kolejność. Jeśli markery są w odpowiedniej kolejności, software automatycznie rozpoznaje kropki na ściankach.']),
+   'Jeśli markery są w odpowiedniej kolejności, software automatycznie rozpoznaje kropki na ściankach. Jeśli nie, laboratorium od razu widzi, którą kolejność zmienić.']),
   dur:14500, k:'akwizycja', tl:[], video:true},
-
- {chip:'Optor L Ultra',title:'Krok 4: dekodowanie w laboratorium',lead:'Laboratorium otwiera akwizycję w Optor L Ultra, zamienia zmierzone punkty na pozycje implantów i ręcznie wybiera bibliotekę CAD.',
-  body:'<h3>Workflow</h3>'+ol([
-   'Pomiar markerów: chmura punktów z akwizycji 3Dots.',
-   'Skanbody 3Dots w zmierzonych pozycjach. Optor pokazuje błąd dopasowania („Current Fitting Error”).',
-   'Wybór biblioteki: ręcznie, z dostępnych bibliotek CAD (np. DAS dla DAS Multi-Unit). Dzięki zdjęciu kropek technik widzi, czy kolejność markerów trzeba zmienić.']),
-  dur:9000, k:'optor', tl:[], video:true},
 
  {chip:'Bliskie implanty',title:'Implanty blisko siebie',lead:'Gdy dwa implanty stoją tak blisko, że oba markery się nie mieszczą, robisz dodatkowe zdjęcie i łączysz je z pierwszym opcją Align.',
   body:'<h3>Co robisz</h3>'+ol([
@@ -547,15 +546,6 @@ var STEPS=[
    'Przełóż marker na sąsiedni implant i zrób dodatkowe zdjęcie.',
    'Opcją Align połącz drugie zdjęcie z pierwszym: jeden zestaw pozycji.']),
   dur:8000, tl:[[3600,2]]},
-
- {chip:'Dopasowanie i STL',title:'Krok 5: dopasowanie i plik STL',lead:'Laboratorium dopasowuje pozycje z 3Dots do podstaw tytanowych na skanie IOS i eksportuje otwarty plik STL ze skanbody wybranej biblioteki.',
-  body:'<h3>Co robisz</h3>'+ol([
-   'Wczytaj skan IOS (STL lub OBJ) z podstawami tytanowymi.',
-   'Nałóż pozycje z 3Dots na podstawy w skanie IOS (matching całego zestawu).',
-   'Pozycje z fotogrametrii i podstawy ze skanu IOS zawsze delikatnie się różnią. Do projektu bierzesz pozycje z 3Dots.',
-   'Sprawdź dopasowanie i wyeksportuj STL: anatomia ze skanu IOS i skanbody wybranej biblioteki w pozycjach z 3Dots.',
-   'Projektuj w CAD (np. exocad) bez kompensowania niedokładności skanu.']),
-  dur:13000, k:'cad', tl:[], video:true},
 
  {chip:'Demontaż',title:'Demontaż i przygotowanie skanbody',lead:'Po akwizycji odkręcasz markery i podstawy. Podstawę tytanową i marker z ergalu przygotowujesz do kolejnego użycia inaczej.',
   body:'<h3>Co robisz</h3>'+ul('do',[
@@ -595,7 +585,23 @@ var STEPS=[
    'Zapis dynamiki: ruch żuchwy względem szczęki rejestrowany przez 3Dots za pomocą płaskich markerów.',
    'Wizualizacja trajektorii ruchu na cyfrowych modelach szczęki i żuchwy.'])+
    '<h3>Dostępność</h3>'+ul('warn',['Aktualizacja oprogramowania o Jaw Motion wychodzi w listopadzie 2026, a do końca roku będzie bezpłatna.']),
-  dur:0, tl:[[2000,2]]}
+  dur:14000, tl:[[2000,2]]},
+
+ {chip:'Lab: Optor L Ultra',isLab:true,title:'Laboratorium, krok 4: dekodowanie w Optor L Ultra',lead:'Laboratorium otwiera akwizycję w Optor L Ultra, zamienia zmierzone punkty na pozycje implantów i ręcznie wybiera bibliotekę CAD.',
+  body:'<h3>Workflow</h3>'+ol([
+   'Pomiar markerów: chmura punktów z akwizycji 3Dots.',
+   'Skanbody 3Dots w zmierzonych pozycjach. Optor pokazuje błąd dopasowania („Current Fitting Error”).',
+   'Wybór biblioteki: ręcznie, z dostępnych bibliotek CAD (np. DAS dla DAS Multi-Unit). Dzięki zdjęciu kropek technik widzi, czy kolejność markerów trzeba zmienić.']),
+  dur:9000, k:'optor', tl:[], video:true},
+
+ {chip:'Lab: dopasowanie i STL',isLab:true,title:'Laboratorium, krok 5: dopasowanie i plik STL',lead:'Laboratorium dopasowuje pozycje z 3Dots do podstaw tytanowych na skanie IOS i eksportuje otwarty plik STL ze skanbody wybranej biblioteki.',
+  body:'<h3>Co robisz</h3>'+ol([
+   'Wczytaj skan IOS (STL lub OBJ) z podstawami tytanowymi.',
+   'Nałóż pozycje z 3Dots na podstawy w skanie IOS (matching całego zestawu).',
+   'Pozycje z fotogrametrii i podstawy ze skanu IOS zawsze delikatnie się różnią. Do projektu bierzesz pozycje z 3Dots.',
+   'Sprawdź dopasowanie i wyeksportuj STL: anatomia ze skanu IOS i skanbody wybranej biblioteki w pozycjach z 3Dots.',
+   'Projektuj w CAD (np. exocad) bez kompensowania niedokładności skanu.']),
+  dur:0, k:'cad', tl:[], video:true}
 ];
 var N=STEPS.length;
 
@@ -606,7 +612,7 @@ var chips=document.getElementById('chips'),pin=document.getElementById('pin'),ba
 var prev=document.getElementById('prev'),next=document.getElementById('next'),count=document.getElementById('count');
 var autoBtn=document.getElementById('auto'),timer=document.getElementById('timer');
 var vbox=document.getElementById('vbox'),vid=document.getElementById('vid');
-chips.innerHTML=STEPS.map(function(s,i){return '<button type="button" class="chip'+(s.isNew?' new':'')+'" data-i="'+i+'"><b>'+String(i).padStart(2,'0')+'</b>'+s.chip+'</button>';}).join('');
+chips.innerHTML=STEPS.map(function(s,i){return '<button type="button" class="chip'+(s.isNew?' new':'')+(s.isLab?' lab':'')+'" data-i="'+i+'"><b>'+String(i).padStart(2,'0')+'</b>'+s.chip+'</button>';}).join('');
 var chipEls=[].slice.call(chips.children);
 var cur=-1,timers=[],auto=false,autoTO=0,swapTO=0;
 function pad(n){return String(n).padStart(2,'0');}
@@ -668,7 +674,7 @@ function play(i){
 }
 function renderPanel(i){
   var s=STEPS[i];
-  var html='<div class="pnum">'+pad(i)+'.</div><h2>'+s.title+'</h2><p class="lead">'+s.lead+'</p>'+(s.body===null?checklistHTML():s.body);
+  var html='<div class="pnum">'+pad(i)+'.'+(s.isLab?' <span class="labtag">Laboratorium</span>':'')+'</div><h2>'+s.title+'</h2><p class="lead">'+s.lead+'</p>'+(s.body===null?checklistHTML():s.body);
   clearTimeout(swapTO);
   if(RM||cur<0){pin.innerHTML=html;wireChecklist();return;}
   pin.classList.add('out');
@@ -743,7 +749,7 @@ document.addEventListener('keydown',function(e){
 document.addEventListener('visibilitychange',function(){if(document.hidden&&auto)setAuto(false);});
 
 /* moduł 3D zgłasza gotowość albo błąd */
-window.KTI_UI={phase:function(i,n){var el=scenes[i];if(!el)return;var li=el.querySelectorAll('.subs li');[].forEach.call(li,function(x,k){x.classList.toggle('now',k===n-1);x.classList.toggle('past',k<n-1);});},
+window.KTI_UI={phase:function(k,n){var i=-1;STEPS.forEach(function(s,j){if(s.k===k)i=j;});var el=scenes[i];if(!el)return;var li=el.querySelectorAll('.subs li');[].forEach.call(li,function(x,k){x.classList.toggle('now',k===n-1);x.classList.toggle('past',k<n-1);});},
   orbit:function(on){stage.classList.toggle('orbit',!!on);}};
 window.addEventListener('kti3d-ready',function(){if(cur>=0&&STEPS[cur].k)play(cur);});
 window.addEventListener('kti3d-error',function(){stage.classList.add('no3d');});
@@ -943,7 +949,7 @@ const rays=new THREE.LineSegments(rayGeo,new THREE.LineBasicMaterial({vertexColo
 /* ---------- kalibracja: listwa, płytka kalibracyjna i 3 podstawki o różnych kątach (wg zdjęcia producenta; kąty poglądowe) ---------- */
 const kal=new THREE.Group();scene.add(kal);
 const KANG=[0,12,-24].map(a=>THREE.MathUtils.degToRad(a)),KPX=170,KPH=46,KTOP=KPH+8,KYAW=THREE.MathUtils.degToRad(14);
-let kPlate,kFace;const kPosts=[];
+let kPlate,kFace,kGlow;const kPosts=[];
 {const blk=MAT.black;
  const rail=new THREE.Mesh(new RoundedBoxGeometry(420,8,64,2,2.5),blk);rail.position.y=4;kal.add(rail);
  [[-195,0],[195,0]].forEach(p=>{const f=new THREE.Mesh(new RoundedBoxGeometry(46,8,110,2,3),blk);f.position.set(p[0],4,0);kal.add(f);});
@@ -962,7 +968,13 @@ let kPlate,kFace;const kPosts=[];
  kFace=new THREE.Mesh(new THREE.PlaneGeometry(156,96),new THREE.MeshStandardMaterial({map:tex,roughness:.6,emissive:0xffffff,emissiveMap:tex,emissiveIntensity:0}));
  kFace.rotation.y=-Math.PI/2;kFace.position.x=-6.2;kIn.add(kFace);
  const neck=new THREE.Mesh(new THREE.CylinderGeometry(10,12,16,32),blk);neck.position.y=-58;kIn.add(neck);
- const disc=new THREE.Mesh(new THREE.CylinderGeometry(19,19,2,48),blk);disc.position.y=1;kPlate.add(disc);}
+ const disc=new THREE.Mesh(new THREE.CylinderGeometry(19,19,2,48),blk);disc.position.y=1;kPlate.add(disc);
+ /* prześwietlenie na podglądzie kamery (pomarańczowe, jak w Head Calibration); maleje przy zmniejszaniu Camera Gain */
+ const ov=(()=>{const c=document.createElement('canvas');c.width=640;c.height=400;const g=c.getContext('2d');let s=7;const rnd=()=>(s=(s*16807)%2147483647)/2147483647;
+   g.fillStyle='#ff8a00';for(let i=0;i<60000;i++){const x=rnd()*640,y=rnd()*400,d=Math.hypot(x-306,y-196)/150;if(rnd()<Math.exp(-d*d*1.6)*1.6)g.fillRect(x,y,3,3);}
+   const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t;})();
+ kGlow=new THREE.Mesh(new THREE.PlaneGeometry(156,96),new THREE.MeshBasicMaterial({map:ov,transparent:true,opacity:0,depthWrite:false,toneMapped:false}));
+ kGlow.position.z=.2;kFace.add(kGlow);}
 const KPARK=[V(120,KPH/2+4,95),V(170,KPH/2+4,105),V(220,KPH/2+4,95)];
 const hudK=document.getElementById('hudk'),hKa=document.getElementById('hudka'),hKb=document.getElementById('hudkb'),hKc=document.getElementById('hudkc');
 
@@ -1017,12 +1029,15 @@ const SC={
    setLabels([{t:'W diament: 2 ściany do 3Dots',p:mkTop(4),show:t=>t>6.6},{t:'Hex 1,5 mm · maks. 10 N·cm',p:mkTop(1),show:t=>t>7.1,left:true},{t:'Numer = kropki na górze (0–4)',p:mkTop(2),show:t=>t>7.6}]);},
   update(t){markers.forEach((g,k)=>{const t0=.5+k*1.05,e=ss(t0,t0+1.5,t),pr=g.userData.pr;pr.position.y=PB+PH/2+(1-e)*24;pr.rotation.y=(1-e)*Math.PI*3;pr.visible=t>t0-.05;});
    cam([[0,[0,70,104],[6,4,0]],[6.4,[10,96,86],[2,4,0]],[10,[0,104,80],[0,4,0]]],t);}},
- kalib:{dur:17,target:[0,90,0],
+ /* najpierw ustawienie światła (raz, podstawka 1, pozycja środkowa), potem 3 podstawki × 3 rejestracje */
+ kalib:{dur:20,target:[0,90,0],
   enter(){kal.visible=true;dev.visible=true;rays.visible=true;camera.fov=30;camera.updateProjectionMatrix();
    dev.position.set(-175,144,0);dev.lookAt(KPX,100,0);dev.updateMatrixWorld(true);
-   setLabels([{t:'3Dots',p:wp(dev,V(0,82,0)),show:t=>t>.5},{t:'Płytka kalibracyjna',p:wp(kFace,V(0,48,0)),show:t=>t>.9},{t:'Podstawka (3 kąty)',p:o=>o.set(KPX+22,30,0),show:t=>t>1.3}]);
+   setLabels([{t:'Prześwietlenie na podglądzie kamery',p:wp(kFace,V(-30,30,0)),show:t=>t>.9&&t<3.3,left:true},
+     {t:'3Dots',p:wp(dev,V(0,82,0)),show:t=>t>3.9},{t:'Płytka kalibracyjna',p:wp(kFace,V(0,48,0)),show:t=>t>4},{t:'Podstawka (3 kąty)',p:o=>o.set(KPX+22,30,0),show:t=>t>4.4}]);
    const a=rayGeo.attributes.position.array;a.fill(0);rayGeo.attributes.position.needsUpdate=true;},
-  update(t){const RG=[1.6,2.6,3.6],n=[0,1,2].reduce((s,w)=>s+RG.filter(d=>t>=.4+w*4.7+d).length,0);
+  update(T){const LG=3,t=T<.4+LG?Math.min(T,.4):T-LG,gain=1-ss(1.1,2.9,T);
+   const RG=[1.6,2.6,3.6],n=[0,1,2].reduce((s,w)=>s+RG.filter(d=>t>=.4+w*4.7+d).length,0);
    const w=Math.min(2,Math.max(0,Math.floor((t-.4)/4.7))),s0=.4+w*4.7,e=ss(s0,s0+1,t),u=t-s0;
    /* zmiana podstawki: płytka unosi się, stara podstawka odjeżdża, nowa wjeżdża, płytka siada na nowej */
    const at=V(KPX,KPH/2+8,0);
@@ -1033,17 +1048,21 @@ const SC={
    const yaw=-KYAW*ss(1.85,2.35,u)+2*KYAW*ss(2.85,3.35,u)-KYAW*ss(3.85,4.35,u);
    kPlate.position.set(KPX,KTOP+lift,0);kPlate.rotation.set(0,yaw,ang);
    let fl=0;for(let k=0;k<3;k++){RG.forEach(d=>{const x=t-(.4+k*4.7+d);if(x>=0&&x<.45)fl=Math.max(fl,1-x/.45);});}
-   ledMats.forEach(m=>m.emissiveIntensity=.15+fl*2.4);kFace.material.emissiveIntensity=fl*.35;
+   const lit=ss(.4,.9,T)*(1-ss(.4+LG,1.2+LG,T));
+   ledMats.forEach(m=>m.emissiveIntensity=.15+fl*2.4+lit*(.5+gain));kFace.material.emissiveIntensity=fl*.35+lit*(.08+.22*gain);
+   kGlow.material.opacity=ss(.5,1,T)*(1-ss(LG+2.4,LG+3.6,T))*(.8+.2*gain);const gs=.6+.4*gain;kGlow.scale.set(gs,gs,1);
    kal.updateMatrixWorld(true);
    const a=rayGeo.attributes.position.array,lp=V(0,0,0),cp=V(0,0,0);let i=0;
    [[-74,-44],[74,-44],[74,44],[-74,44]].forEach(c=>{cp.set(c[0],c[1],0.1);kFace.localToWorld(cp);lensObjs.forEach(o=>{lp.setFromMatrixPosition(o.matrixWorld);a.set([lp.x,lp.y,lp.z,cp.x,cp.y,cp.z],i*6);i++;});});
    rayGeo.attributes.position.needsUpdate=true;rays.material.opacity=fl*.8;
-   hudK.classList.toggle('on',t>.3);
+   hudK.classList.toggle('on',T>.3);
+   if(T<.4+LG){hKa.innerHTML=(gain<.05?'<span class="ok">Światło ustawione</span>':'Ustawienie światła')+' · tylko raz';hKb.textContent='Camera Gain: suwak w lewo, aż pomarańczowe pole zmaleje';hKc.style.width=(14+22*gain)+'%';
+     cam([[0,[-40,180,250],[160,116,0]],[3.4,[-40,180,250],[160,116,0]]],T);return;}
    if(t>=14.6){hKa.innerHTML='Wyniki kalibracji: <span class="ok">X, Y, Z na zielono</span>';hKb.innerHTML='<span class="ok">X STD 0.005016 · Y STD 0.005356 · Z STD 0.012810</span>';}
    else if(n>=9){hKa.innerHTML='9 / 9 rejestracji · <span class="ok">Calibrate</span>';hKb.textContent='obliczanie kalibracji osi X, Y, Z';}
    else{const r=u<2.35?1:u<3.35?2:3;hKa.textContent='Podstawka '+(w+1)+' z 3 · rejestracja '+r+' z 3';hKb.textContent='Płytka: '+['środek','lekko w prawo','lekko w lewo'][r-1]+' · rejestracje: '+n+' / 9';}
    hKc.style.width=(n/9*100)+'%';
-   cam([[0,[-430,300,640],[40,75,0]],[15,[-280,280,720],[40,75,0]]],t);}},
+   cam([[LG+.4,[-40,180,250],[160,116,0]],[LG+1.5,[-430,300,640],[40,75,0]],[LG+15,[-280,280,720],[40,75,0]]],T);}},
  /* najpierw zdjęcie (przycisk 2 razy): rejestracja kropek na górnych ścianach markerów, potem akwizycja po łuku */
  akwizycja:{dur:14.5,target:[0,4,0],
   enter(){jaw.visible=true;shadow.visible=true;placeMarkers();markers.forEach(m=>m.visible=true);gumVis(true);dev.visible=true;rays.visible=true;dotMesh.visible=true;camera.fov=30;camera.updateProjectionMatrix();
@@ -1066,7 +1085,7 @@ const SC={
   update(t){setDots((d,i)=>ss(.2+i/ALLDOTS.length*1.4,.5+i/ALLDOTS.length*1.4,t)*(1-ss(3.4,4.4,t)));dotMesh.visible=t<4.5;
    const B=ss(2.3,3.1,t)*(1-ss(4.6,5.4,t));MAT.optor.opacity=B;omarkers.forEach(m=>m.visible=B>.01);
    const C=ss(4.8,5.6,t);MAT.lib.opacity=C;libs.forEach(m=>m.visible=C>.01);
-   const ph=t<2.3?1:t<4.8?2:3;if(ph!==this._ph){this._ph=ph;window.KTI_UI&&KTI_UI.phase(6,ph);}
+   const ph=t<2.3?1:t<4.8?2:3;if(ph!==this._ph){this._ph=ph;window.KTI_UI&&KTI_UI.phase('optor',ph);}
    cam([[0,[0,96,44],[0,0,4]],[8.5,[30,88,54],[0,0,4]]],t);}},
  cad:{dur:13,target:[0,0,2],
   /* pozycje z 3Dots nałożone na skan IOS: po dopasowaniu całego zestawu każda podstawa IOS różni się od pozycji z fotogrametrii
@@ -1094,7 +1113,7 @@ const SC={
    const E=ss(9.4,10.6,t);
    if(E<=0){jawMesh.material=jawMat;libMat(MAT.lib);MAT.lib.opacity=L;gums.forEach(g=>g.material=gumMat);}
    else{jawMesh.material=MAT.stl;MAT.stl.opacity=1;libMat(MAT.stl);gums.forEach(g=>g.material=MAT.stl);MAT.stl.color.set('#d5928b').lerp(new THREE.Color('#6f9fd8'),E);}
-   const ph=t<3.6?1:t<7.4?2:t<9.4?3:4;if(ph!==this._ph){this._ph=ph;window.KTI_UI&&KTI_UI.phase(8,ph);}
+   const ph=t<3.6?1:t<7.4?2:t<9.4?3:4;if(ph!==this._ph){this._ph=ph;window.KTI_UI&&KTI_UI.phase('cad',ph);}
    const c=this.c;cam([[0,[26,92,70],[0,0,2]],[3.6,[20,86,74],[0,0,2]],[4.6,[c.x+20,c.y+20,c.z+30],[c.x,c.y,c.z]],[8.4,[c.x+14,c.y+18,c.z+32],[c.x,c.y,c.z]],[10.4,[30,88,64],[0,0,2]],[13,[38,84,70],[0,0,2]]],t);}}
 };
 const hudA=document.getElementById('hud4'),hA=document.getElementById('hud4a'),hB=document.getElementById('hud4b'),hC=document.getElementById('hud4c');
@@ -1103,7 +1122,7 @@ function hud(t){hudA.classList.toggle('on',t>.3);
   else if(t<1.6){hA.textContent='Zdjęcie · przycisk 2 razy';hB.textContent='rejestracja kropek na górnych ścianach markerów';hC.style.width='0';}
   else if(t<4.3){hA.innerHTML='<span class="ok">Zdjęcie zapisane</span> · numery markerów 0–4';hB.textContent='software wie, który marker stoi na której pozycji';hC.style.width='0';}
   else if(t<9.4){hA.innerHTML='Akwizycja · odległość: <span class="ok">OPTYMALNA</span>';hB.textContent='ruch po łuku ok. ±15° · ok. 35 cm';hC.style.width=(ss(4.4,9.4,t)*100)+'%';}
-  else{const n=Math.min(5,Math.max(0,Math.floor((t-10.4)/.55)+1));hA.innerHTML=(n>=5?'<span class="ok">Wszystkie markery zielone · koniec skanu</span>':'Identyfikacja skanbody · znalezione: '+n+' / 5');hB.innerHTML='Scan Abutments Found: '+n+' · zadeklarowane: 5'+(n>=5?' <span class="ok">✓</span>':'');hC.style.width='100%';}}
+  else{const n=Math.min(5,Math.max(0,Math.floor((t-10.4)/.55)+1));hA.innerHTML=(n>=5?'<span class="ok">Wszystkie markery zielone · przycisk 1 raz: koniec skanu</span>':'Identyfikacja skanbody · znalezione: '+n+' / 5');hB.innerHTML='Scan Abutments Found: '+n+' · zadeklarowane: 5'+(n>=5?' <span class="ok">✓</span>':'');hC.style.width='100%';}}
 
 /* ---------- pętla ---------- */
 const controls=new OrbitControls(camera,canvas);controls.enabled=false;controls.enableDamping=true;controls.enablePan=false;controls.minDistance=25;controls.maxDistance=700;
